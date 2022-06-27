@@ -1,47 +1,48 @@
 {
-  "name": "coc",
-  "version": "1.0.0",
-  "description": "coc",
   "private": true,
-  "egg": {
-    "declarations": true
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "test": "umi test",
+    "lint": "eslint {src,mock,tests}/**/*.{js,jsx} --fix",
+    "precommit": "lint-staged"
   },
   "dependencies": {
-    "egg": "^2.15.1",
-    "egg-mongoose": "^3.3.1",
-    "egg-scripts": "^2.11.0"
+    "@ant-design/icons": "^4.6.2",
+    "@umijs/plugin-antd-mobile": "^1.2.0",
+    "ahooks": "^2.10.3",
+    "antd": "^4.14.1",
+    "antd-mobile": "^5.16.0",
+    "dayjs": "^1.10.4",
+    "dva": "^2.4.1",
+    "mockjs": "^1.1.0",
+    "postcss-px-to-viewport": "^1.1.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-transition-group": "^4.4.1",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
-    "autod": "^3.0.1",
-    "autod-egg": "^1.1.0",
-    "egg-bin": "^4.11.0",
-    "egg-ci": "^1.11.0",
-    "egg-mock": "^3.21.0",
-    "eslint": "^5.13.0",
-    "eslint-config-egg": "^7.1.0"
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.4.0",
+    "eslint-config-umi": "^1.4.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.2",
+    "react-test-renderer": "^16.7.0",
+    "umi": "^2.7.7",
+    "umi-plugin-react": "^1.8.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "engines": {
-    "node": ">=10.0.0"
-  },
-  "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-coc",
-    "stop": "egg-scripts stop --title=egg-server-coc",
-    "dev": "egg-bin dev",
-    "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
-    "cov": "egg-bin cov",
-    "lint": "eslint .",
-    "ci": "npm run lint && npm run cov",
-    "autod": "autod"
-  },
-  "ci": {
-    "version": "10"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "author": "jxx",
-  "license": "MIT"
+    "node": ">=8.0.0"
+  }
 }
