@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2022-06-28 14:27:37
+ * @LastEditTime: 2022-06-28 14:54:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
  */
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Row, Col, Avatar, message, Dropdown,Button } from 'antd';
+import { Layout, Menu, Row, Col, Avatar, message, Dropdown } from 'antd';
 import router from 'umi/router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
