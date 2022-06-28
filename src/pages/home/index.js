@@ -1,29 +1,16 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2022-06-26 14:55:21
+ * @LastEditTime: 2022-06-28 13:56:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
  */
-import { useState, useEffect, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { connect } from 'dva'
 import * as dayjs from 'dayjs'
-import {
-    message, Button,
-    Form,
-    Input,
-    Select,
-    Empty,
-    Card,
-    Tag,
-    Popconfirm
-} from "antd"
-import { UserOutlined } from '@ant-design/icons';
-
+import { message } from "antd"
 import Styles from './index.less'
-
-const { TextArea } = Input;
 
 const mapStateToProps = (state) => ({
     global: state.global,
@@ -36,166 +23,48 @@ export default connect(mapStateToProps)(({
         loginUser
     }
 }) => {
-    const [page, setPage] = useState(1)
-    const [userList, setUserList] = useState([])
-    const [activeList, setActiveList] = useState([])
-
-    useEffect(() => {
-        getActive()
-        getAllUser()
-    }, [getActive, getAllUser])
-
-    const onFormLayoutChange = (values) => {
-        console.log(values);
-    };
-
-    const getAllUser = useCallback((params = null) => {
-        dispatch({
-            type: "loginModel/getAllUser",
-        })
-            .then(res => {
-                setUserList(res.data)
-            })
-    })
-    const getActive = useCallback((params = null) => {
-
-        dispatch({
-            type: 'global/getActive',
-            payload: params
-        })
-            .then(res => {
-                setActiveList(res.data.reverse())
-            })
-
-    })
-    const deleteActive = useCallback((params = null) => {
-        
-
-        dispatch({
-            type: 'global/deleteActive',
-            payload: params
-        })
-            .then(res => {
-                getActive()
-            })
-
-    })
-    const startActive = useCallback((params = null) => {
-        
-
-        dispatch({
-            type: 'global/startActive',
-            payload: params
-        })
-            .then(res => {
-                message.success(res.msg)
-                getActive()
-            })
-
-    })
-
-    const onFinish = (values) => {
-        const params = {
-            creater: JSON.parse(loginUser).userName,
-            createTime: dayjs().valueOf(),
-            ...values
+    setInterval(() => {
+        setShowTime(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+    }, 1000);
+    const [homename] = useState('welcome to home')
+    const [nowTime] = useState(dayjs().hour())
+    const [showTime,setShowTime] = useState(dayjs().format('YYYY-MM-DD HH:mm:ss'))
+    const [state, setState] = useState('')
+    const showMessage = useCallback(() => {
+        if (7 <= nowTime && nowTime < 12) {
+            return '早上好'
+        } else if (12 <= nowTime && nowTime < 13) {
+            return '中午好'
+        } else if (13 <= nowTime && nowTime < 18) {
+            return '下午好'
+        } else {
+            if (nowTime >= 23 || (nowTime >= 0 && nowTime < 7)) {
+                message.warn('已经很晚了，早点休息！')
+            }
+            return '晚上好 '
         }
-        dispatch({
-            type: 'global/createActive',
-            payload: params
-        })
-            .then(res => {
-                message.success(res.msg)
-                getActive()
-                setPage(1)
-            })
+    }, [nowTime])
+    
+    useEffect(() => {
+        if (loginUser !== null) {
+            setState(showMessage())
+        }
+    }, [loginUser, showMessage])
 
-    }
 
     return (
-        <>
-            <div className={Styles.Box} style={{ textAlign: "center" }} >
-                <div className={Styles.content}>
-                    {page === 1 ?
-                        (<div>{
-                            activeList.length === 0 ? (
-                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                            ) : (
-                                <div style={{ textAlign: 'left' }}>{activeList.map(item => <Card title={item.activityName} extra={<Popconfirm
-                                    title="确认删除该条活动?"
-                                    onConfirm={()=>deleteActive({id:item._id})}
-                                    okText="确认"
-                                    disabled={JSON.parse(loginUser).userName!==item.creater}
-                                    cancelText="取消"
-                                  >
-                                    <Button disabled={JSON.parse(loginUser).userName!==item.creater} type="link" >删除</Button>
-                                  </Popconfirm>}>
-                                    <p>活动奖品:{item.activityPrizes}</p>
-                                    <p>活动人员:
-                                    {item.activityStaff.map(item => <Tag icon={<UserOutlined />} color="#55acee">
-                                        {item}
-                                    </Tag>)}
-                                    </p>
-                                    <p>活动备注:{item.activityRemark}</p>
-                                    <p>活动创建者:{item.creater}</p>
-                                    {item.result?(
-                                        <p>活动结果:
-                                            {`恭喜${item.result}获得奖励！`}
-                                         </p>  
-                                    ):(
-                                    <div>
-                                        <Popconfirm
-                                    title="确认开始抽签?"
-                                    onConfirm={()=>startActive({id:item._id})}
-                                    okText="确认"
-                                    disabled={JSON.parse(loginUser).userName!==item.creater}
-                                    cancelText="取消"
-                                  >
-                                        <Button disabled={JSON.parse(loginUser).userName!==item.creater} type="link">开始抽签</Button>
-                                        </Popconfirm>
-                                    </div>
-                                    )}
-                                </Card>)}</div>
-                            )
-                        }</div>)
-                        : (
-                            <div style={{ padding: '20px' }}>
-                                <Form
-                                    labelCol={{
-                                        span: 4,
-                                    }}
-                                    wrapperCol={{
-                                        span: 14,
-                                    }}
-                                    layout="horizontal"
-                                    onValuesChange={onFormLayoutChange}
-                                    onFinish={onFinish}
-                                >
-                                    <Form.Item label="活动名称" name="activityName" rules={[{ required: true, message: '请输入活动名称' }]}>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item label="活动奖品" name="activityPrizes" rules={[{ required: true, message: '请输入活动奖品' }]}>
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item label="活动人员" name="activityStaff" rules={[{ required: true, message: '请选择活动人员' }]}>
-                                        <Select mode="multiple">
-                                            {userList && userList.map(item => <Select.Option value={item.userName}>{item.userName}</Select.Option>)}
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item label="活动备注" name="activityRemark">
-                                        <TextArea rows={4} />
-                                    </Form.Item>
-                                    <Button type="primary" htmlType="submit">提交</Button>
-                                </Form>
-                            </div>
-                        )}
-                </div>
-                <div className={Styles.option_box}>
-                    <Button style={{ width: '50vw' }} type="link" onClick={() => { setPage(1); getActive() }}>活动</Button>
-                    <Button style={{ width: '50vw' }} type="link" onClick={() => setPage(2)}>新建</Button>
-                </div>
+       <>
+        <div style={{ textAlign: "center" }} >
+            <h3 className={Styles.textBox}>{homename}</h3>
+            <div>
+                {state}
             </div>
-        </>
+            <div>当前时间：{showTime}</div>
+        </div>
+        <div>
+            
+        </div>
+       </>
 
     )
 })

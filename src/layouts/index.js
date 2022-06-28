@@ -1,18 +1,19 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2022-06-25 14:43:36
+ * @LastEditTime: 2022-06-28 14:27:37
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
  */
 import React from 'react';
 import { connect } from 'dva';
-import { message,Drawer } from 'antd';
+import { Layout, Menu, Row, Col, Avatar, message, Dropdown,Button } from 'antd';
 import router from 'umi/router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import {UserOutlined} from '@ant-design/icons'
 
+
+const { Header, Content } = Layout;
 
 @connect(({ loginModel }) => ({
   ...loginModel
@@ -43,34 +44,53 @@ class BasicLayout extends React.Component {
     router.push('/login');
     message.success('退出成功！');
   }
-  toPerson = () => {
-    router.push('/person');
-  }
-  openLeftBox=()=>{
-    this.setState({
-      showRightBox:true
-    })
-  }
   render() {
+    let userEle = <div style={{ width: '100px' }}>
+      <Menu>
+        <Menu.Item key='1' onClick={this.toPerson}>
+          个人信息
+        </Menu.Item>
+        <Menu.Item key='2' onClick={this.handleLogout}>
+          注销
+        </Menu.Item>
+      </Menu>
+    </div>;
     return (
-      <>
-        <div style={{height:'60px',lineHeight:'60px',display:'flex',borderBottom:'1px solid #ccc'}}>
-          <div style={{margin:'0 20px',cursor:'pointer'}} onClick={()=>this.openLeftBox()}>
-          <UserOutlined />
-          </div>
-          <div style={{flex:'1',textAlign:'center'}}>海天盛宴。</div>
-        </div>
+      <Layout>
+      <Header>
+        <Row>
+          <Col span={22}>
+            <Menu
+              theme='dark'
+              mode='horizontal'
+              style={{ lineHeight: '64px' }}
+              onClick={this.changeRoter}
+              defaultSelectedKeys={['/home']}
+            >
+              <Menu.Item key='/home'>主页</Menu.Item>
+            </Menu>
+          </Col>
+          <Col span={2}>
+            <div style={{textAlign:'right'}}>
+              <Dropdown overlay={userEle} placement="bottomCenter" >
+                <div>
+                  <Avatar size={32} src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                </div>
+              </Dropdown>
+            </div>
+          </Col>
+        </Row>
+      </Header>
+      <Content>
         <TransitionGroup>
           <CSSTransition key={window.location.pathname} classNames="fade" timeout={300}>
-            <div style={{ height: 'calc(100vh - 60px)' }}>
-              {this.props.children}
+            <div style={{height:'calc(100vh - 64px)'}}>
+            {this.props.children}
             </div>
           </CSSTransition>
         </TransitionGroup>
-        <Drawer width={'60vw'} closable={false} title={this.props.loginUser&&JSON.parse(this.props.loginUser).userName} placement="left"  onClose={()=>{this.setState({showRightBox:false})}} visible={this.state.showRightBox}>
-        <p onClick={()=>this.handleLogout()}>退出</p>
-      </Drawer>
-      </>
+      </Content>
+    </Layout>
     );
   }
 }

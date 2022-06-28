@@ -15,7 +15,6 @@
     "dayjs": "^1.10.4",
     "dva": "^2.4.1",
     "mockjs": "^1.1.0",
-    "postcss-px-to-viewport": "^1.1.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-transition-group": "^4.4.1",
