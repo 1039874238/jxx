@@ -12,4 +12,5 @@ module.exports = app => {
   router.post('/getActive', controller.active.getActive);
   router.post('/deleteActive', controller.active.deleteActive);
   router.post('/startActive', controller.active.startActive);
+  router.post('/member/create', controller.member.createMember);
 };
