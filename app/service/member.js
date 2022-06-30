@@ -20,6 +20,14 @@ class Member extends Service {
     }
   }
 
+  async updateMember(params) {
+    await this.ctx.model.Active.updateOne({ memberTag: params.memberTag }, { $set: { memberName: params.memberName, position: params.position, status: params.status } });
+    this.ctx.body = {
+      state: 200,
+      msg: '修改成功',
+    };
+  }
+
 
 }
 

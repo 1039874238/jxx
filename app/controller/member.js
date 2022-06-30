@@ -6,5 +6,10 @@ class MemberController extends Controller {
     const req = ctx.request.body;
     await ctx.service.member.createMember(req);
   }
+  async updateMember() {
+    const { ctx } = this;
+    const req = ctx.request.body;
+    await ctx.service.member.updateMember(req);
+  }
 }
 module.exports = MemberController;
