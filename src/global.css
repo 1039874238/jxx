@@ -9,3 +9,6 @@ body {
 .ant-layout-header{
   padding:  0 25px;
 }
+.option_box{
+ text-align: right;
+}
