@@ -14,4 +14,5 @@ module.exports = app => {
   router.post('/startActive', controller.active.startActive);
   router.post('/member/create', controller.member.createMember);
   router.post('/member/update', controller.member.updateMember);
+  router.get('/member/get', controller.member.getMember);
 };
