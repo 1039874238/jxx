@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2021-03-04 11:01:59
- * @LastEditTime: 2022-06-25 16:33:24
+ * @LastEditTime: 2022-07-01 14:40:40
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \app\src\pages\login\model.js
  */
-import Server from "../servers/user";
+import Server from "../servers";
 export default {
     namespace: 'loginModel',
     state: {

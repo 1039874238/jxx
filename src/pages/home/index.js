@@ -1,80 +1,92 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2022-06-30 17:25:35
+ * @LastEditTime: 2022-07-01 17:04:04
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
  */
 import { connect } from 'dva'
 import { useMount } from 'ahooks'
-import { Input, Button, Space, Table } from 'antd';
-import { AudioOutlined } from '@ant-design/icons';
+import { Input, Button, Space, Table, Tag } from 'antd';
 import { useState } from 'react';
 import MemberModal from './memberModal'
 const { Search } = Input;
 
 const mapStateToProps = (state) => ({
-    global: state.global,
-    loginModel: state.loginModel,
+    memberModel: state.memberModel,
 })
-const suffix = (
-    <AudioOutlined
-        style={{
-            fontSize: 16,
-            color: '#1890ff',
-        }}
-    />
-);
-const columns = [
-    {
-        title: '村庄名称',
-        dataIndex: 'name',
-    },
-    {
-        title: '村庄标签',
-        dataIndex: 'age',
-    },
-    {
-        title: '职位',
-        dataIndex: 'address',
-    },
-    {
-        title: '操作',
-        dataIndex: 'address',
-        render: (text, record, index) => <Button type="link">修改</Button>
-    },
-];
 
-export default connect(mapStateToProps)(({
-    dispatch,
-    loginModel: {
-        loginUser
-    }
-}) => {
+export default connect(mapStateToProps)((props) => {
     const [tableList, setTableList] = useState([])
     const [tableHeight, setTableHeight] = useState('100px')
     const [memberVisible, setmemberVisible] = useState(false);
+    const [modelConfig, setModelConfig] = useState({ title: '新增' })
+    const positionEnum = {
+        0: {
+            description: '成员',
+            color: 'purple'
+        },
+        1: {
+            description: '长老',
+            color: 'blue'
+        },
+        2: {
+            description: '副首领',
+            color: 'cyan'
+        },
+        3: {
+            description: '首领',
+            color: 'gold'
+        },
+    }
+
+    const columns = [
+        {
+            title: '村庄名称',
+            dataIndex: 'memberName',
+        },
+        {
+            title: '村庄标签',
+            dataIndex: 'memberTag',
+        },
+        {
+            title: '职位',
+            dataIndex: 'position',
+            render: (text, record, index) => <Tag color={positionEnum[text].color}>{positionEnum[text].description}</Tag>
+        },
+        {
+            title: '操作',
+            dataIndex: '_id',
+            render: (text, record, index) => <Button type="link" disabled={record.position === 3} onClick={() => openModal({ title: '修改', record })}>修改</Button>
+        },
+    ];
 
     useMount(() => {
         const height = window.innerHeight - 64 - 62 - 55
         setTableHeight(height)
-        const data = []
-        for (let i = 0; i < 100; i++) {
-            data.push({
-                key: i,
-                name: `Edward King ${i}`,
-                age: 32,
-                address: `London, Park Lane no. ${i}`,
-            });
-        }
-        setTableList(data)
+        onSearch()
 
     })
     const onSearch = (value) => {
-        console.log(value)
+        let payload = {}
+        if (value) {
+            payload.memberName = value.trim()
+        }
+        props.dispatch({
+            type: 'memberModel/getMember',
+            payload
+        }).then(res => {
+            if (res.state === 200) {
+                setTableList(res.data)
+            }
+        })
     }
-    const openModal = () => {
+    const openModal = (config) => {
+        // 直接插入数据库
+        // { "memberName": "大不列颠", "memberTag": "#234234234", "position": 3, "status": 0 }
+
+        setModelConfig(config)
         setmemberVisible(true);
     };
     const closeModal = () => {
@@ -88,11 +100,10 @@ export default connect(mapStateToProps)(({
                     <Search
                         placeholder="请输入村庄名称"
                         enterButton="查询"
-                        suffix={suffix}
                         onSearch={onSearch}
                         style={{ width: '252px' }}
                     />
-                    <Button type="primary" onClick={openModal}>新增</Button>
+                    <Button type="primary" onClick={() => openModal({ title: '新增' })}>新增</Button>
                 </Space>
             </div>
             <div style={{ paddingTop: '10px' }}>
@@ -110,7 +121,9 @@ export default connect(mapStateToProps)(({
             <>
                 <MemberModal
                     visible={memberVisible}
+                    config={modelConfig}
                     closeModal={closeModal}
+                    onSearch={onSearch}
                 />
             </>
         </>

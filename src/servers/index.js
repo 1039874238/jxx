@@ -49,4 +49,22 @@ export default class Server {
             body: stringify(params),
         });
     }
+    // post
+    static async createMember(params) {
+        return request(`${url}member/create`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async updateMember(params) {
+        return request(`${url}member/update`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // get
+    static async getMember(params) {
+        return request(`${url}member/get?${stringify(params)}`);
+    }
 }

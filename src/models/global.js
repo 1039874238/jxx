@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2021-01-21 13:50:15
- * @LastEditTime: 2022-06-26 10:32:32
+ * @LastEditTime: 2022-07-01 14:40:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \app\src\models\global.js
  */
-import Server from "../servers/user";
+import Server from "../servers";
 export default {
     namespace: 'global',
     state: {

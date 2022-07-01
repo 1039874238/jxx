@@ -1,4 +1,4 @@
-import Server from "../servers/user";
+import Server from "../servers";
 export default {
     namespace: 'userModel',
     state: {
