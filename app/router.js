@@ -8,11 +8,17 @@ module.exports = app => {
   router.post('/registered', controller.user.registered);
   router.post('/login', controller.user.login);
   router.get('/getAllUser', controller.user.getAllUser);
+
   router.post('/createActive', controller.active.createActive);
   router.post('/getActive', controller.active.getActive);
   router.post('/deleteActive', controller.active.deleteActive);
   router.post('/startActive', controller.active.startActive);
+
   router.post('/member/create', controller.member.createMember);
   router.post('/member/update', controller.member.updateMember);
   router.get('/member/get', controller.member.getMember);
+
+  router.post('/league/create', controller.league.create);
+  router.post('/league/delete', controller.league.delete);
+  router.get('/league/get', controller.league.get);
 };
