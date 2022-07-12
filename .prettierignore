@@ -1,7 +1,6 @@
-**/*.md
-**/*.svg
-**/*.ejs
-**/*.html
-package.json
+*.svg
+*.ejs
+.DS_Store
 .umi
 .umi-production
+src/locales/**/*.json

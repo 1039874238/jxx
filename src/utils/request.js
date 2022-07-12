@@ -1,92 +1,92 @@
-/*
- * @Author: your name
- * @Date: 2021-01-21 11:11:07
- * @LastEditTime: 2022-06-25 11:21:21
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \app\src\utils\request.js
- */
-import { extend } from 'umi-request';
-import { notification } from 'antd';
+import axios from 'axios'
+import { cloneDeep } from 'lodash'
+const { parse, compile } = require("path-to-regexp")
+import { message } from 'antd'
+import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
 
+const { CancelToken } = axios
+window.cancelRequest = new Map()
 
-const codeMessage = {
-    200: '服务器成功返回请求的数据。',
-    201: '新建或修改数据成功。',
-    202: '一个请求已经进入后台排队（异步任务）。',
-    204: '删除数据成功。',
-    400: '发出的请求有错误，服务器没有进行新建或修改数据的操作。',
-    401: '用户没有权限（令牌、用户名、密码错误）。',
-    403: '用户得到授权，但是访问是被禁止的。',
-    404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
-    406: '请求的格式不可得。',
-    410: '请求的资源被永久删除，且不会再得到的。',
-    422: '当创建一个对象时，发生一个验证错误。',
-    500: '服务器发生错误，请检查服务器。',
-    502: '网关错误。',
-    503: '服务不可用，服务器暂时过载或维护。',
-    504: '网关超时。',
-};
+export default function request(options) {
+  let { data, url } = options
+  const cloneData = cloneDeep(data)
 
-/**
- * 异常处理程序
- */
-const errorHandler = error => {
-    const { response } = error;
-
-    if (response && response.status) {
-        const errorText = codeMessage[response.status] || response.statusText;
-        const { status, url } = response;
-        notification.error({
-            message: `请求错误 ${status}: ${url}`,
-            description: errorText,
-        });
+  try {
+    let domain = ''
+    const urlMatch = url.match(/[a-zA-z]+:\/\/[^/]*/)
+    if (urlMatch) {
+      ;[domain] = urlMatch
+      url = url.slice(domain.length)
     }
 
-    return response;
-};
-const request = extend({
-    errorHandler,
-    // 默认错误处理
-    credentials: 'include', // 默认请求是否带上cookie
+    const match = parse(url)
+    url = compile(url)(data)
 
-});
-
-// request拦截器, 改变url 或 options.
-request.interceptors.request.use(async (url, options) => {
-
-    let c_token = localStorage.getItem('x-auth-token');
-    const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json',
-        'x-auth-token': c_token
-    };
-    if (c_token) {
-        return (
-            {
-                url: url,
-                options: { ...options, headers: headers },
-            }
-        );
-    } else {
-        return (
-            {
-                url: url,
-                options: { ...options,headers: headers },
-            }
-        );
+    for (const item of match) {
+      if (item instanceof Object && item.name in cloneData) {
+        delete cloneData[item.name]
+      }
     }
+    url = domain + url
+  } catch (e) {
+    message.error(e.message)
+  }
 
-});
+  options.url = url
+  options.cancelToken = new CancelToken(cancel => {
+    window.cancelRequest.set(Symbol(Date.now()), {
+      pathname: window.location.pathname,
+      cancel,
+    })
+  })
 
-// response拦截器, 处理response
-request.interceptors.response.use((response, options) => {
-    let token = response.headers.get('x-auth-token');
-    if (token) {
-        localStorage.setItem('x-auth-token', token);
-    }
-    return response;
-});
+  return axios(options)
+    .then(response => {
+      const { statusText, status, data } = response
 
+      let result = {}
+      if (typeof data === 'object') {
+        result = data
+        if (Array.isArray(data)) {
+          result.list = data
+        }
+      } else {
+        result.data = data
+      }
 
-export default request;
+      return Promise.resolve({
+        success: true,
+        message: statusText,
+        statusCode: status,
+        ...result,
+      })
+    })
+    .catch(error => {
+      const { response, message } = error
+
+      if (String(message) === CANCEL_REQUEST_MESSAGE) {
+        return {
+          success: false,
+        }
+      }
+
+      let msg
+      let statusCode
+
+      if (response && response instanceof Object) {
+        const { data, statusText } = response
+        statusCode = response.status
+        msg = data.message || statusText
+      } else {
+        statusCode = 600
+        msg = error.message || 'Network Error'
+      }
+
+      /* eslint-disable */
+      return Promise.reject({
+        success: false,
+        statusCode,
+        message: msg,
+      })
+    })
+}
