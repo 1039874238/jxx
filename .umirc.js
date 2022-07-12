@@ -60,6 +60,11 @@ export default {
       changeOrigin: true,
       pathRewrite: { '^/api/v1/weather': '/v3/weather' },
     },
+    '/api/v1': {
+      target: 'http://127.0.0.1:7001/',
+      changeOrigin: true,
+      pathRewrite: { '^/api/v1': '' },
+    },
   },
   // Theme for antd
   // https://ant.design/docs/react/customize-theme
