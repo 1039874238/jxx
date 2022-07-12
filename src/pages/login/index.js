@@ -19,6 +19,7 @@ class Login extends PureComponent {
     const { dispatch, loading } = this.props
     
     const handleOk = values => {
+      console.log(values);
       dispatch({ type: 'login/login', payload: values })
     }
     let footerLinks = [
