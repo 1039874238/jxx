@@ -15,5 +15,9 @@ class UserController extends Controller {
     const { ctx } = this;
     await ctx.service.user.getAllUser();
   }
+  async getUser() {
+    const { ctx } = this;
+    await ctx.service.user.getUser();
+  }
 }
 module.exports = UserController;

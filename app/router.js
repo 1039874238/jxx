@@ -8,6 +8,7 @@ module.exports = app => {
   router.post('/registered', controller.user.registered);
   router.post('/login', controller.user.login);
   router.get('/getAllUser', controller.user.getAllUser);
+  router.get('/getUser', controller.user.getUser);
 
   router.post('/createActive', controller.active.createActive);
   router.post('/getActive', controller.active.getActive);

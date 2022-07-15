@@ -1,5 +1,23 @@
 'use strict';
 const Service = require('egg').Service;
+const EnumRoleType = {
+  ADMIN: 'admin',
+  DEFAULT: 'guest',
+  DEVELOPER: 'developer',
+};
+
+const userPermission = {
+  0: {
+    visit: [ '1', '2', '21', '7', '5', '51', '52', '53' ],
+    role: EnumRoleType.DEFAULT,
+  },
+  1: {
+    role: EnumRoleType.ADMIN,
+  },
+  2: {
+    role: EnumRoleType.DEVELOPER,
+  },
+};
 class Users extends Service {
   // 注册
   async registered(params) {
@@ -33,7 +51,14 @@ class Users extends Service {
     const corrct = await this.ctx.model.User.findOne({ phone: params.phone });
     if (corrct) {
       if (corrct.password === params.password) {
-        const output = await this.ctx.model.User.findOne({ phone: params.phone }, { userName: 1, type: 1 });
+        const output = await this.ctx.model.User.findOne({ phone: params.phone }, { userName: 1, type: 1, _id: 1 });
+        const now = new Date();
+        now.setDate(now.getDate() + 1);
+        this.ctx.cookies.set('token', JSON.stringify({ id: output._id, deadline: now.getTime() }),
+          {
+            maxAge: 900000,
+            httpOnly: true,
+          });
         this.ctx.body = {
           state: 200,
           data: output,
@@ -60,6 +85,30 @@ class Users extends Service {
     this.ctx.body = {
       state: 200,
       data: output,
+      msg: '成功',
+    };
+  }
+  // 获取用户
+  async getUser() {
+    const token = this.ctx.cookies.get('token', {
+      signed: false,
+    });
+    if (!token) {
+      this.ctx.body = {
+        state: 201,
+        msg: 'error',
+      };
+      return;
+    }
+    const output = await this.ctx.model.User.findOne({ _id: JSON.parse(token).id }, { userName: 1, type: 1, _id: 1 });
+    const result = {
+      id: output._id,
+      userName: output.userName,
+      permissions: userPermission[output.type],
+    };
+    this.ctx.body = {
+      state: 200,
+      user: result,
       msg: '成功',
     };
   }
