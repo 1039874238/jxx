@@ -18,18 +18,18 @@ describe('Login', () => {
   afterEach(() => page.close())
 
   it('should login with failure', async () => {
-    await page.waitFor(selector => !!document.querySelector('#username'), {
+    await page.waitFor(selector => !!document.querySelector('#userName'), {
       timeout: 3000,
     })
-    await page.type('#username', 'wrong_user')
+    await page.type('#userName', 'wrong_user')
     await page.type('#password', 'wrong_password')
     await page.click('button[type="button"]')
     await page.waitForSelector('.anticon-close-circle') // should display error
   })
 
   it('should login successfully', async () => {
-    await page.waitForSelector('#username', { timeout: 3000 })
-    await page.type('#username', 'admin')
+    await page.waitForSelector('#userName', { timeout: 3000 })
+    await page.type('#userName', 'admin')
     await page.type('#password', 'admin')
     await page.click('button[type="button"]')
     await page.waitForSelector('.ant-layout-footer')

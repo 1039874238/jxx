@@ -48,9 +48,9 @@ export default {
     ],
   },
   subscriptions: {
-    setup({ dispatch }) {
-      dispatch({ type: 'query' })
-    },
+    // setup({ dispatch }) {
+    //   dispatch({ type: 'query' })
+    // },
     setupHistory({ dispatch, history }) {
       history.listen(location => {
         dispatch({
@@ -85,8 +85,8 @@ export default {
         return
       }
       const { locationPathname } = yield select(_ => _.app)
-      const { success, user } = yield call(queryUserInfo, payload)
-      if (success && user) {
+      const { success, state, user } = yield call(queryUserInfo, payload)
+      if ((success || state === 200) && user) {
         const { list } = yield call(queryRouteList)
         const { permissions } = user
         let routeList = list

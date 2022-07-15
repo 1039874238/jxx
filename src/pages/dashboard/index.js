@@ -33,7 +33,7 @@ const bodyStyle = {
 class Dashboard extends PureComponent {
   render() {
     const userDetail = store.get('user')
-    const { avatar, username } = userDetail
+    const { avatar, userName } = userDetail
     const { dashboard, loading } = this.props
     const {
       weather,
@@ -145,7 +145,7 @@ class Dashboard extends PureComponent {
               bordered={false}
               bodyStyle={{ ...bodyStyle.bodyStyle, padding: 0 }}
             >
-              <User {...user} avatar={avatar} username={username} />
+              <User {...user} avatar={avatar} userName={userName} />
             </Card>
           </Col>
         </Row>

@@ -25,7 +25,7 @@ class Header extends PureComponent {
     const {
       fixed,
       avatar,
-      username,
+      userName,
       collapsed,
       notifications,
       onCollapseChange,
@@ -40,8 +40,7 @@ class Header extends PureComponent {
               <span style={{ color: '#999', marginRight: 4 }}>
                 <Trans>Hi,</Trans>
               </span>
-              <span>{username}</span>
-              <Avatar style={{ marginLeft: 8 }} src={avatar} />
+              <span>{userName}</span>
             </Fragment>
           }
         >

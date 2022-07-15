@@ -87,7 +87,7 @@ class PrimaryLayout extends PureComponent {
       notifications,
       onCollapseChange,
       avatar: user.avatar,
-      username: user.username,
+      userName: user.userName,
       fixed: config.fixedHeader,
       onAllNotificationsRead() {
         dispatch({ type: 'app/allNotificationsRead' })

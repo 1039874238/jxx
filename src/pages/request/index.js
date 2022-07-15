@@ -54,7 +54,7 @@ class RequestPage extends React.Component {
 
     this.formRef.current.validateFields()
       .then(values => {
-        // values: { check[1]: true, key[1]: 'username', value[1]: 'admin' }
+        // values: { check[1]: true, key[1]: 'userName', value[1]: 'admin' }
 
         const params = {}
         for (let i in values) {
@@ -77,11 +77,11 @@ class RequestPage extends React.Component {
         errorInfo:
           {
             values: {
-              username: 'username',
+              userName: 'userName',
               password: 'password',
             },
             errorFields: [
-              { password: ['username'], errors: ['Please input your Password!'] },
+              { password: ['userName'], errors: ['Please input your Password!'] },
             ],
             outOfDate: false,
           }
