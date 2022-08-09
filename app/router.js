@@ -4,22 +4,24 @@
  * @param {Egg.Application} app - egg application
  */
 module.exports = app => {
-  const { router, controller } = app;
+  const { router, controller, jwt } = app;
+
+  router.get('/user/authorization', jwt, controller.user.auth); // token授权
   router.post('/registered', controller.user.registered);
   router.post('/login', controller.user.login);
-  router.get('/getAllUser', controller.user.getAllUser);
-  router.get('/getUser', controller.user.getUser);
+  router.get('/getAllUser', jwt, controller.user.getAllUser);
+  router.get('/getUser', jwt, controller.user.getUser);
 
-  router.post('/createActive', controller.active.createActive);
-  router.post('/getActive', controller.active.getActive);
-  router.post('/deleteActive', controller.active.deleteActive);
-  router.post('/startActive', controller.active.startActive);
+  router.post('/createActive', jwt, controller.active.createActive);
+  router.post('/getActive', jwt, controller.active.getActive);
+  router.post('/deleteActive', jwt, controller.active.deleteActive);
+  router.post('/startActive', jwt, controller.active.startActive);
 
-  router.post('/member/create', controller.member.createMember);
-  router.post('/member/update', controller.member.updateMember);
-  router.get('/member/get', controller.member.getMember);
+  router.post('/member/create', jwt, controller.member.createMember);
+  router.post('/member/update', jwt, controller.member.updateMember);
+  router.get('/member/get', jwt, controller.member.getMember);
 
-  router.post('/league/create', controller.league.create);
-  router.post('/league/delete', controller.league.delete);
-  router.get('/league/get', controller.league.get);
+  router.post('/league/create', jwt, controller.league.create);
+  router.post('/league/delete', jwt, controller.league.delete);
+  router.get('/league/get', jwt, controller.league.get);
 };

@@ -4,7 +4,11 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1641975352438_173';
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [ 'errorHandle' ];
+  config.jwt = {
+    secret: 'secret', // 密钥
+    ignore: [ /^\/login/, /^\/registered/ ], // 哪些请求不需要认证
+  };
   config.security = {
     csrf: {
       enable: false,

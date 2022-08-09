@@ -51,18 +51,14 @@ class Users extends Service {
     const corrct = await this.ctx.model.User.findOne({ phone: params.phone });
     if (corrct) {
       if (corrct.password === params.password) {
+        const secret = this.app.config.jwt.secret;
+        const token = this.ctx.helper.getToken({ phone: params.phone }, secret);
         const output = await this.ctx.model.User.findOne({ phone: params.phone }, { userName: 1, type: 1, _id: 1 });
-        const now = new Date();
-        now.setDate(now.getDate() + 1);
-        this.ctx.cookies.set('token', JSON.stringify({ id: output._id, deadline: now.getTime() }),
-          {
-            maxAge: 900000,
-            httpOnly: true,
-          });
         this.ctx.body = {
           state: 200,
           data: output,
           msg: '登录成功',
+          token,
         };
 
       } else {
@@ -81,6 +77,7 @@ class Users extends Service {
 
   // 获取所有用户
   async getAllUser() {
+    console.log(this.ctx.state.user);
     const output = await this.ctx.model.User.find({}, { userName: 1, phone: 1 });
     this.ctx.body = {
       state: 200,
@@ -90,17 +87,7 @@ class Users extends Service {
   }
   // 获取用户
   async getUser() {
-    const token = this.ctx.cookies.get('token', {
-      signed: false,
-    });
-    if (!token) {
-      this.ctx.body = {
-        state: 201,
-        msg: 'error',
-      };
-      return;
-    }
-    const output = await this.ctx.model.User.findOne({ _id: JSON.parse(token).id }, { userName: 1, type: 1, _id: 1 });
+    const output = await this.ctx.model.User.findOne({ phone: this.ctx.state.user.phone }, { userName: 1, type: 1, _id: 1 });
     const result = {
       id: output._id,
       userName: output.userName,
