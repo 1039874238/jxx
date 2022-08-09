@@ -123,12 +123,19 @@ export default {
     },
 
     *signOut({ payload }, { call, put }) {
+      const { locationPathname } = yield select(_ => _.app)
+      
         store.set('routeList', [])
         store.set('permissions', { visit: [] })
         store.set('user', {})
         store.set('isInit', false)
         store.set('token', '')
-        yield put({ type: 'query' })
+        history.push({
+          pathname: '/login',
+          search: stringify({
+            from: locationPathname,
+          }),
+        })
     },
   },
   reducers: {
