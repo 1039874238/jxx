@@ -123,16 +123,12 @@ export default {
     },
 
     *signOut({ payload }, { call, put }) {
-      const data = yield call(logoutUser)
-      if (data.success) {
         store.set('routeList', [])
         store.set('permissions', { visit: [] })
         store.set('user', {})
         store.set('isInit', false)
+        store.set('token', '')
         yield put({ type: 'query' })
-      } else {
-        throw data
-      }
     },
   },
   reducers: {

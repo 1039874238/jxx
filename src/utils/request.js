@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash'
 const { parse, compile } = require("path-to-regexp")
 import { message } from 'antd'
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
+import store from 'store'
 
 const { CancelToken } = axios
 window.cancelRequest = new Map()
@@ -39,6 +40,10 @@ export default function request(options) {
       cancel,
     })
   })
+  let token = store.get('token')
+  if(token){
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
 
   return axios(options)
     .then(response => {

@@ -1,5 +1,6 @@
 import { history } from 'umi'
 import api from 'api'
+import store from 'store'
 import {message} from 'antd'
 const { pathToRegexp } = require("path-to-regexp")
 
@@ -16,6 +17,7 @@ export default {
       if (data.state === 200) {
         const { from } = locationQuery
         message.success(data.msg)
+        store.set('token',data.token)
         yield put({ type: 'app/query' })
         if (!pathToRegexp('/login').exec(from)) {
           if (['', '/'].includes(from)) history.push('/dashboard')
