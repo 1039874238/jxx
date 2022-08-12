@@ -17,6 +17,10 @@ module.exports = app => {
       default: [],
     },
     point: {
+      type: Array,
+      default: [],
+    },
+    totalPoint: {
       type: Number,
       default: 0,
     },
