@@ -6,9 +6,9 @@
 module.exports = app => {
   const { router, controller, jwt } = app;
 
-  router.get('/user/authorization', jwt, controller.user.auth); // token授权
   router.post('/registered', controller.user.registered);
   router.post('/login', controller.user.login);
+  router.get('/user/authorization', jwt, controller.user.auth); // token授权
   router.get('/getAllUser', jwt, controller.user.getAllUser);
   router.get('/getUser', jwt, controller.user.getUser);
 
@@ -24,4 +24,9 @@ module.exports = app => {
   router.post('/league/create', jwt, controller.league.create);
   router.post('/league/delete', jwt, controller.league.delete);
   router.get('/league/get', jwt, controller.league.get);
+
+  router.post('/war/create', controller.war.create);
+  router.post('/war/delete', controller.war.delete);
+  router.post('/war/update', controller.war.update);
+  router.get('/war/get', controller.war.get);
 };

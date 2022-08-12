@@ -1,6 +1,6 @@
 /**
  * @description: 统一错误处理
- * @code  401 未授权 500:服务器内部错误  422 :状态码是指请求格式正确，但是由于含有语义错误，无法响应。
+ * @state  401 未授权 500:服务器内部错误  422 :状态码是指请求格式正确，但是由于含有语义错误，无法响应。
  * @return:
  */
 'use strict';
@@ -20,7 +20,7 @@ module.exports = () => {
       if (status === 401) {
         // 自定义jwt错误处理
         ctx.body = {
-          code: 401,
+          state: 401,
           // token过期或错误
           msg: 'token error',
         };
