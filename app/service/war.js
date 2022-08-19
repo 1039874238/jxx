@@ -6,7 +6,14 @@ class War extends Service {
   async create(params) {
     const { ctx } = this;
     const result = await ctx.model.War.insertMany([ params ]);
-    console.log(result[0]._id);
+    const warResultParams = [];
+    result[0].ourSide.forEach(item => {
+      warResultParams.push({
+        warId: result[0]._id,
+        ourTag: item,
+      });
+    });
+    await ctx.model.WarResult.insertMany(warResultParams);
     ctx.body = {
       state: 200,
       msg: '添加成功',

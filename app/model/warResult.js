@@ -9,9 +9,6 @@ module.exports = app => {
     ourTag: {
       type: String,
     },
-    ourName: {
-      type: String,
-    },
     others: {
       type: Array,
       default: [],

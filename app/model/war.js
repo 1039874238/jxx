@@ -31,6 +31,9 @@ module.exports = app => {
       type: Number,
       default: 0,
     },
+    sort: {
+      type: Number,
+    },
   });
   return mongoose.model('WarModel', warSchema, 'war');
 };
