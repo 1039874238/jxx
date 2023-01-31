@@ -29,4 +29,9 @@ module.exports = app => {
   router.post('/war/delete', controller.war.delete);
   router.post('/war/update', controller.war.update);
   router.get('/war/get', controller.war.get);
+
+  router.post('/njsj/create', controller.projectNjsj.createProject);
+  router.post('/njsj/get', controller.projectNjsj.getProject);
+  router.post('/njsj/update', controller.projectNjsj.updateProject);
+  router.post('/njsj/getProjectWithCookie', controller.projectNjsj.getProjectWithCookie);
 };
