@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2022-07-01 17:04:04
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-01-31 15:58:17
+ * @LastEditors: 1039874238 1039874238@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
  */
@@ -14,7 +14,7 @@ import MemberModal from './memberModal'
 const { Search } = Input;
 
 const mapStateToProps = (state) => ({
-    memberModel: state.memberModel,
+    projectModel: state.projectModel,
 })
 
 export default connect(mapStateToProps)((props) => {
@@ -53,12 +53,10 @@ export default connect(mapStateToProps)((props) => {
         {
             title: '职位',
             dataIndex: 'position',
-            render: (text, record, index) => <Tag color={positionEnum[text].color}>{positionEnum[text].description}</Tag>
         },
         {
             title: '操作',
             dataIndex: '_id',
-            render: (text, record, index) => <Button type="link" disabled={record.position === 3} onClick={() => openModal({ title: '修改', record })}>修改</Button>
         },
     ];
 
@@ -74,7 +72,7 @@ export default connect(mapStateToProps)((props) => {
             payload.memberName = value.trim()
         }
         props.dispatch({
-            type: 'memberModel/getMember',
+            type: 'projectModel/getProject',
             payload
         }).then(res => {
             if (res.state === 200) {
@@ -97,12 +95,6 @@ export default connect(mapStateToProps)((props) => {
         <>
             <div className='option_box'>
                 <Space>
-                    <Search
-                        placeholder="请输入村庄名称"
-                        enterButton="查询"
-                        onSearch={onSearch}
-                        style={{ width: '252px' }}
-                    />
                     <Button type="primary" onClick={() => openModal({ title: '新增' })}>新增</Button>
                 </Space>
             </div>

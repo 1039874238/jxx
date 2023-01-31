@@ -50,21 +50,32 @@ export default class Server {
         });
     }
     // post
-    static async createMember(params) {
-        return request(`${url}member/create`, {
+    static async createProject(params) {
+        console.log(params);
+        return request(`${url}njsj/create`, {
             method: 'post',
             body: stringify(params),
         });
     }
     // post
-    static async updateMember(params) {
-        return request(`${url}member/update`, {
+    static async updateProject(params) {
+        return request(`${url}njsj/update`, {
             method: 'post',
             body: stringify(params),
         });
     }
-    // get
-    static async getMember(params) {
-        return request(`${url}member/get?${stringify(params)}`);
+    // post
+    static async getProject(params) {
+        return request(`${url}njsj/get`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async getProjectWithCookie(params) {
+        return request(`${url}njsj/getProjectWithCookie`, {
+            method: 'post',
+            body: stringify(params),
+        });
     }
 }
