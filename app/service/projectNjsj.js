@@ -94,7 +94,7 @@ class Project extends Service {
           contentId: '',
           courseName: item.courseName,
         };
-        const findProject = project.find(value => value.teachPlanCourseId === item.teachingPlanCourseId);
+        const findProject = project.find(value => value.teachPlanCourseId.toString() === item.teachingPlanCourseId.toString());
         if (findProject) {
           pro.contentType = findProject.contentType;
           pro.maxTime = findProject.maxTime;
