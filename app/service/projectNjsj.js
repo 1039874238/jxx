@@ -31,6 +31,7 @@ const getNjsjProject = cookie => {
         method: 'POST',
       },
       (err, res, body) => {
+        console.log(res.statusCode);
         try {
           const result = JSON.parse(body).data.filter(item => item.learnStatusName === '在修' && item.score !== 100 && item.courseName !== '南京审计大学党史知识竞赛');
           resolve(result);
