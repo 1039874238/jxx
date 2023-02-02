@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-01-21 11:11:07
- * @LastEditTime: 2022-06-25 11:21:21
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-02-02 14:34:05
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\utils\request.js
  */
@@ -37,10 +37,11 @@ const errorHandler = error => {
     if (response && response.status) {
         const errorText = codeMessage[response.status] || response.statusText;
         const { status, url } = response;
-        notification.error({
-            message: `请求错误 ${status}: ${url}`,
-            description: errorText,
-        });
+        console.log(errorText,status, url);
+        // notification.error({
+        //     message: `请求错误 ${status}: ${url}`,
+        //     description: errorText,
+        // });
     }
 
     return response;

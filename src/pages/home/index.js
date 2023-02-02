@@ -1,124 +1,132 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-01-31 15:58:17
- * @LastEditors: 1039874238 1039874238@qq.com
+ * @LastEditTime: 2023-02-02 11:24:15
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
  */
-import { connect } from 'dva'
-import { useMount } from 'ahooks'
-import { Input, Button, Space, Table, Tag } from 'antd';
+import { connect } from 'dva';
+import { useMount } from 'ahooks';
+import { Button, Space, Table, Select } from 'antd';
 import { useState } from 'react';
-import MemberModal from './memberModal'
-const { Search } = Input;
+import MemberModal from './memberModal';
 
-const mapStateToProps = (state) => ({
-    projectModel: state.projectModel,
-})
+const mapStateToProps = state => ({
+  projectModel: state.projectModel,
+});
 
-export default connect(mapStateToProps)((props) => {
-    const [tableList, setTableList] = useState([])
-    const [tableHeight, setTableHeight] = useState('100px')
-    const [memberVisible, setmemberVisible] = useState(false);
-    const [modelConfig, setModelConfig] = useState({ title: '新增' })
-    const positionEnum = {
-        0: {
-            description: '成员',
-            color: 'purple'
-        },
-        1: {
-            description: '长老',
-            color: 'blue'
-        },
-        2: {
-            description: '副首领',
-            color: 'cyan'
-        },
-        3: {
-            description: '首领',
-            color: 'gold'
-        },
+export default connect(mapStateToProps)(props => {
+  const [tableList, setTableList] = useState([]);
+  const [tableHeight, setTableHeight] = useState('100px');
+  const [memberVisible, setmemberVisible] = useState(false);
+  const [loadingTable, setloadingTable] = useState(false);
+  const [modelConfig, setModelConfig] = useState({ title: '新增' });
+  const watchStatus = {
+    '0': '未开始',
+    '1': '学习中',
+    '2': '已完成',
+    '3': '失败',
+    '': null,
+  };
+
+  const columns = [
+    {
+      title: '用户',
+      dataIndex: 'userInfo',
+    },
+    {
+      title: '科目名称',
+      dataIndex: 'courseName',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      render: (text, record, index) => watchStatus[text],
+    },
+    {
+      title: '开始时间',
+      dataIndex: 'startTime',
+    },
+    {
+      title: '结束时间',
+      dataIndex: 'endTime',
+    },
+  ];
+
+  useMount(() => {
+    const height = window.innerHeight - 64 - 62 - 100;
+    setTableHeight(height);
+    onSearch('1');
+  });
+  const onSearch = value => {
+    setloadingTable(true)
+    let payload = {};
+    if (value) {
+      payload.status = value.trim();
     }
-
-    const columns = [
-        {
-            title: '村庄名称',
-            dataIndex: 'memberName',
-        },
-        {
-            title: '村庄标签',
-            dataIndex: 'memberTag',
-        },
-        {
-            title: '职位',
-            dataIndex: 'position',
-        },
-        {
-            title: '操作',
-            dataIndex: '_id',
-        },
-    ];
-
-    useMount(() => {
-        const height = window.innerHeight - 64 - 62 - 55
-        setTableHeight(height)
-        onSearch()
-
-    })
-    const onSearch = (value) => {
-        let payload = {}
-        if (value) {
-            payload.memberName = value.trim()
+    props
+      .dispatch({
+        type: 'projectModel/getProject',
+        payload,
+      })
+      .then(res => {
+        if (res.state === 200) {
+          setTableList(res.data);
         }
-        props.dispatch({
-            type: 'projectModel/getProject',
-            payload
-        }).then(res => {
-            if (res.state === 200) {
-                setTableList(res.data)
-            }
-        })
-    }
-    const openModal = (config) => {
-        // 直接插入数据库
-        // { "memberName": "大不列颠", "memberTag": "#234234234", "position": 3, "status": 0 }
-
-        setModelConfig(config)
-        setmemberVisible(true);
-    };
-    const closeModal = () => {
-        setmemberVisible(false);
-    };
-    return (
-
-        <>
-            <div className='option_box'>
-                <Space>
-                    <Button type="primary" onClick={() => openModal({ title: '新增' })}>新增</Button>
-                </Space>
-            </div>
-            <div style={{ paddingTop: '10px' }}>
-                <Table
-                    bordered
-                    size={'small'}
-                    columns={columns}
-                    dataSource={tableList}
-                    pagination={false}
-                    scroll={{
-                        y: tableHeight,
-                    }}
-                />
-            </div>
-            <>
-                <MemberModal
-                    visible={memberVisible}
-                    config={modelConfig}
-                    closeModal={closeModal}
-                    onSearch={onSearch}
-                />
-            </>
-        </>
-
-    )
-})
+      })
+      .finally(_=>{
+        setloadingTable(false)
+      })
+  };
+  const openModal = config => {
+    setModelConfig(config);
+    setmemberVisible(true);
+  };
+  const closeModal = () => {
+    setmemberVisible(false);
+  };
+  return (
+    <>
+      <div className="option_box">
+        <Space>
+          <Select
+            defaultValue="1"
+            style={{ width: 120 }}
+            onSelect={onSearch}
+            options={[
+              { value: '1', label: '学习中' },
+              { value: '2', label: '已完成' },
+              { value: '0', label: '未开始' },
+              { value: '3', label: '失败' },
+            ]}
+          />
+          <Button type="primary" onClick={() => openModal({ title: '新增' })}>
+            新增
+          </Button>
+        </Space>
+      </div>
+      <div style={{ paddingTop: '10px' }}>
+        <Table
+        loading={loadingTable}
+          bordered
+          size={'small'}
+          columns={columns}
+          dataSource={tableList}
+          pagination={{total:tableList.length,defaultPageSize:50,showTotal:(total)=>`共 ${total} 条`,showSizeChanger:true}}
+          scroll={{
+            y: tableHeight,
+          }}
+        />
+      </div>
+      <>
+        <MemberModal
+          visible={memberVisible}
+          config={modelConfig}
+          closeModal={closeModal}
+          onSearch={onSearch}
+        />
+      </>
+    </>
+  );
+});

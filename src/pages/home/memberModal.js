@@ -7,29 +7,9 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps)((props) => {
     const [form] = Form.useForm();
-    const [project,setProject] = useState([
-        {
-            teachPlanCourseId:8590,
-            contentType:11,
-            maxTime:720,
-            contentId:'kcjs_1_2',
-            courseName:'领导力与管理沟通(专升本)'
-        }
-    ])
+    const [project,setProject] = useState([])
     useEffect(() => {
-        if (props.config.title === '修改') {
-            const { record } = props.config
-            const initValue = {
-                memberName: record.memberName,
-                memberTag: record.memberTag,
-                position: record.position,
-                status: record.status,
-            }
-            delete initValue.key
-            form.setFieldsValue(initValue)
-        } else {
             form.resetFields()
-        }
     }, [form, props.config])
     const [initValue] = useState({
         cookies:''
@@ -40,16 +20,23 @@ export default connect(mapStateToProps)((props) => {
             type:'projectModel/getProjectWithCookie',
             payload:{cookie:value}
         })
-        console.log(value);
-        const initValue = {
-            8590:{
-            contentType:11,
-            maxTime:720,
-            contentId:'kcjs_1_2',
-            courseName:'领导力与管理沟通(专升本)'
+        .then(res=>{
+            if(res.data){
+                setProject(res.data)
+                let initValue = {}
+                res.data.forEach(item=>{
+                    initValue[item.teachPlanCourseId]={
+                        contentType:item.contentType,
+                        maxTime:item.maxTime,
+                        contentId:item.contentId,
+                        courseName:item.courseName
+                    }
+                })
+                form.setFieldsValue(initValue)
+            }else{
+                message.error('cookie 有误！')
             }
-        }
-        form.setFieldsValue(initValue)
+        })
     }
 
     const handleOk = () => {

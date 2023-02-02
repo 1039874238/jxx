@@ -1,21 +1,22 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2022-06-30 17:25:08
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-02-02 14:55:04
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
  */
 import React from 'react';
 import { connect } from 'dva';
-import { Layout, Menu, Row, Col, Avatar, message, Dropdown } from 'antd';
+import { Layout, Menu, Row, Col, Avatar, message, Dropdown,ConfigProvider } from 'antd';
 import router from 'umi/router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import zhCN from 'antd/es/locale/zh_CN';
 
 
 const { Header, Content } = Layout;
 const mainMenu = [
-  { label: '主页', key: '/home' }
+  { label: '南审', key: '/home' }
 ]
 
 @connect(({ loginModel }) => ({
@@ -76,6 +77,7 @@ class BasicLayout extends React.Component {
       />
     </div>;
     return (
+      <ConfigProvider locale={zhCN}>
       <Layout>
         <Header>
           <Row>
@@ -110,6 +112,7 @@ class BasicLayout extends React.Component {
           </TransitionGroup>
         </Content>
       </Layout>
+      </ConfigProvider>
     );
   }
 }
