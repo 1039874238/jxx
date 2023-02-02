@@ -11,7 +11,9 @@ module.exports = app => {
     maxTime: { type: String },
     contentType: { type: String },
     teachPlanCourseId: { type: String },
-    status: { type: Number, default: 0 }, // 0 未开始 1 进行中 2 已完成 3 失败
+    startTime: { type: String, default: '' },
+    endTime: { type: String, default: '' },
+    status: { type: String, default: '0' }, // 0 未开始 1 进行中 2 已完成 3 失败
   });
   return mongoose.model('projectModel', projectSchema, 'projectNjsj');
 };

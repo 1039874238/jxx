@@ -1,6 +1,7 @@
 'use strict';
 const Service = require('egg').Service;
 const request = require('request');
+const dayjs = require('dayjs');
 
 const getNjsjProject = cookie => {
   return new Promise((resolve, reject) => {
@@ -31,7 +32,7 @@ const getNjsjProject = cookie => {
       },
       (err, res, body) => {
         try {
-          const result = JSON.parse(body).data.filter(item => item.learnStatusName === '在修' && item.score !== 101 && item.courseName !== '南京审计大学党史知识竞赛');
+          const result = JSON.parse(body).data.filter(item => item.learnStatusName === '在修' && item.score !== 100 && item.courseName !== '南京审计大学党史知识竞赛');
           resolve(result);
         } catch (e) {
           reject(e);
@@ -68,7 +69,12 @@ class Project extends Service {
   }
 
   async updateProject(params) {
-    await this.ctx.model.ProjectNjsj.updateOne({ _id: params.id }, { $set: { status: params.status } });
+    const editParams = {
+      status: params.status,
+      ...params.status === '1' && { startTime: dayjs().format('YYYY-MM-DD HH:mm:ss') },
+      ...params.status === '2' && { endTime: dayjs().format('YYYY-MM-DD HH:mm:ss') },
+    };
+    await this.ctx.model.ProjectNjsj.updateOne({ _id: params.id }, { $set: { ...editParams } });
     this.ctx.body = {
       state: 200,
       msg: '修改成功',
@@ -77,7 +83,26 @@ class Project extends Service {
 
   async getProjectWithCookie(params) {
     const body = await getNjsjProject(params.cookie);
-    const result = body;
+    const project = await this.ctx.model.ProjectNjsj.find();
+    let result = [];
+    if (body.length > 0) {
+      result = body.map(item => {
+        const pro = {
+          teachPlanCourseId: item.teachingPlanCourseId,
+          contentType: '',
+          maxTime: '',
+          contentId: '',
+          courseName: item.courseName,
+        };
+        const findProject = project.find(value => value.teachPlanCourseId === item.teachingPlanCourseId);
+        if (findProject) {
+          pro.contentType = findProject.contentType;
+          pro.maxTime = findProject.maxTime;
+          pro.contentId = findProject.contentId;
+        }
+        return pro;
+      });
+    }
     this.ctx.body = {
       state: 200,
       data: result,
