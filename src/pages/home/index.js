@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-02-02 11:24:15
+ * @LastEditTime: 2023-02-03 11:15:32
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
@@ -17,6 +17,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(props => {
+  const [status, setStatus] = useState('1');
   const [tableList, setTableList] = useState([]);
   const [tableHeight, setTableHeight] = useState('100px');
   const [memberVisible, setmemberVisible] = useState(false);
@@ -57,11 +58,12 @@ export default connect(mapStateToProps)(props => {
   useMount(() => {
     const height = window.innerHeight - 64 - 62 - 100;
     setTableHeight(height);
-    onSearch('1');
+    onSearch();
   });
-  const onSearch = value => {
-    setloadingTable(true)
+  const onSearch = (value = status) => {
+    setloadingTable(true);
     let payload = {};
+    console.log(value);
     if (value) {
       payload.status = value.trim();
     }
@@ -75,9 +77,9 @@ export default connect(mapStateToProps)(props => {
           setTableList(res.data);
         }
       })
-      .finally(_=>{
-        setloadingTable(false)
-      })
+      .finally(_ => {
+        setloadingTable(false);
+      });
   };
   const openModal = config => {
     setModelConfig(config);
@@ -91,7 +93,7 @@ export default connect(mapStateToProps)(props => {
       <div className="option_box">
         <Space>
           <Select
-            defaultValue="1"
+            value={status}
             style={{ width: 120 }}
             onSelect={onSearch}
             options={[
@@ -104,16 +106,24 @@ export default connect(mapStateToProps)(props => {
           <Button type="primary" onClick={() => openModal({ title: '新增' })}>
             新增
           </Button>
+          <Button type="primary" onClick={() => onSearch()}>
+            刷新
+          </Button>
         </Space>
       </div>
       <div style={{ paddingTop: '10px' }}>
         <Table
-        loading={loadingTable}
+          loading={loadingTable}
           bordered
           size={'small'}
           columns={columns}
           dataSource={tableList}
-          pagination={{total:tableList.length,defaultPageSize:50,showTotal:(total)=>`共 ${total} 条`,showSizeChanger:true}}
+          pagination={{
+            total: tableList.length,
+            defaultPageSize: 50,
+            showTotal: total => `共 ${total} 条`,
+            showSizeChanger: true,
+          }}
           scroll={{
             y: tableHeight,
           }}
