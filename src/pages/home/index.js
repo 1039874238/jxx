@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-02-03 11:15:32
+ * @LastEditTime: 2023-02-03 15:30:47
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
@@ -61,6 +61,7 @@ export default connect(mapStateToProps)(props => {
     onSearch();
   });
   const onSearch = (value = status) => {
+    setStatus(value)
     setloadingTable(true);
     let payload = {};
     console.log(value);
