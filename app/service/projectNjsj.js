@@ -32,7 +32,12 @@ const getNjsjProject = cookie => {
       },
       (err, res, body) => {
         try {
-          const result = JSON.parse(body).data.filter(item => item.learnStatusName === '在修' && item.score !== 100 && item.courseName !== '南京审计大学党史知识竞赛');
+          const result = JSON.parse(body).data.filter(
+            item =>
+              item.learnStatusName === '在修' &&
+              item.score !== 100 &&
+              item.courseName !== '南京审计大学党史知识竞赛'
+          );
           resolve(result);
         } catch (e) {
           reject(e);
@@ -43,7 +48,6 @@ const getNjsjProject = cookie => {
 };
 
 class Project extends Service {
-
   // 新建活动
   async createProject(params) {
     await this.ctx.model.ProjectNjsj.insertMany(Object.values(params));
@@ -70,11 +74,21 @@ class Project extends Service {
 
   async updateProject(params) {
     const editParams = {
-      status: params.status,
-      ...params.status === '1' && { startTime: dayjs().format('YYYY-MM-DD HH:mm:ss') },
-      ...params.status === '2' && { endTime: dayjs().format('YYYY-MM-DD HH:mm:ss') },
+      ...(params.status && { status: params.status }),
+      ...(params.status === '1' && {
+        startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      }),
+      ...(params.status === '2' && {
+        endTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      }),
+      ...(params.estimatedCompletionTime && {
+        estimatedCompletionTime: params.estimatedCompletionTime,
+      }),
     };
-    await this.ctx.model.ProjectNjsj.updateOne({ _id: params.id }, { $set: { ...editParams } });
+    await this.ctx.model.ProjectNjsj.updateOne(
+      { _id: params.id },
+      { $set: { ...editParams } }
+    );
     this.ctx.body = {
       state: 200,
       msg: '修改成功',
@@ -94,7 +108,11 @@ class Project extends Service {
           contentId: '',
           courseName: item.courseName,
         };
-        const findProject = project.find(value => value.teachPlanCourseId.toString() === item.teachingPlanCourseId.toString());
+        const findProject = project.find(
+          value =>
+            value.teachPlanCourseId.toString() ===
+            item.teachingPlanCourseId.toString()
+        );
         if (findProject) {
           pro.contentType = findProject.contentType;
           pro.maxTime = findProject.maxTime;
@@ -109,6 +127,5 @@ class Project extends Service {
       msg: '成功',
     };
   }
-
 }
 module.exports = Project;
