@@ -7,8 +7,6 @@
  * @FilePath: \app\src\utils\request.js
  */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
-
 
 const codeMessage = {
     200: '服务器成功返回请求的数据。',

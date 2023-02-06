@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-02-02 14:55:04
+ * @LastEditTime: 2023-02-06 14:16:44
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -16,7 +16,8 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 const { Header, Content } = Layout;
 const mainMenu = [
-  { label: '南审', key: '/home' }
+  { label: '南审', key: '/botNjsj' },
+  { label: '海事', key: '/botJshs' },
 ]
 
 @connect(({ loginModel }) => ({
@@ -87,7 +88,7 @@ class BasicLayout extends React.Component {
                 mode='horizontal'
                 style={{ lineHeight: '64px' }}
                 onClick={this.changeRoter}
-                defaultSelectedKeys={['/home']}
+                defaultSelectedKeys={['/botNjsj']}
                 items={mainMenu}
               />
             </Col>

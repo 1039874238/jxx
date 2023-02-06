@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2022-06-28 14:42:08
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-02-06 14:32:54
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
@@ -18,11 +18,15 @@ export default {
       routes: [
         {
           path: '/',
-          component: '../pages/home'
+          component: '../pages/botNjsj'
         },
         {
-          path: '/home',
-          component: '../pages/home'
+          path: '/botNjsj',
+          component: '../pages/botNjsj'
+        },
+        {
+          path: '/botJshs',
+          component: '../pages/botJshs'
         },
       ]
     }

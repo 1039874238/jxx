@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-02-03 15:30:47
+ * @LastEditTime: 2023-02-06 14:54:39
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
@@ -61,7 +61,7 @@ export default connect(mapStateToProps)(props => {
     onSearch();
   });
   const onSearch = (value = status) => {
-    setStatus(value)
+    setStatus(value);
     setloadingTable(true);
     let payload = {};
     console.log(value);
@@ -96,7 +96,6 @@ export default connect(mapStateToProps)(props => {
           <Select
             value={status}
             style={{ width: 120 }}
-            onSelect={onSearch}
             options={[
               { value: '1', label: '学习中' },
               { value: '2', label: '已完成' },
@@ -104,11 +103,11 @@ export default connect(mapStateToProps)(props => {
               { value: '3', label: '失败' },
             ]}
           />
+          <Button type="primary" onClick={() => onSearch()}>
+            查询
+          </Button>
           <Button type="primary" onClick={() => openModal({ title: '新增' })}>
             新增
-          </Button>
-          <Button type="primary" onClick={() => onSearch()}>
-            刷新
           </Button>
         </Space>
       </div>

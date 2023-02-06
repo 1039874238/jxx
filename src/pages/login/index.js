@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:03:48
- * @LastEditTime: 2022-06-26 13:43:09
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-02-06 10:54:16
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\login\index.js
  */
@@ -37,7 +37,7 @@ class Login extends Component {
                 .then(res => {
                     if (res.state === 200) {
                         sessionStorage.setItem('roles', JSON.stringify(res.data));
-                        router.push('/home');
+                        router.push('/botNjsj');
                         message.destroy();
                         message.success(res.msg);
                     } else {
