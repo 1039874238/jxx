@@ -14,6 +14,11 @@ module.exports = appInfo => {
       enable: false,
     },
   };
+  config.multipart = {
+    fileSize: '50mb',
+    mode: 'stream',
+    fileExtensions: [ '.xlsx' ],
+  };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
