@@ -36,5 +36,6 @@ module.exports = app => {
   router.post('/njsj/getProjectWithCookie', controller.projectNjsj.getProjectWithCookie);
 
   router.post('/jshs/uploadUserList', controller.haishi.uploadFile.uploadFiles_stream);
+  router.post('/jshs/getUser', controller.haishi.user.getUser);
 
 };
