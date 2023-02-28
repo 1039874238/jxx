@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-02-06 14:54:39
+ * @LastEditTime: 2023-02-28 16:55:44
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
@@ -94,7 +94,7 @@ export default connect(mapStateToProps)(props => {
       <div className="option_box">
         <Space>
           <Select
-            value={status}
+            defaultValue={status}
             style={{ width: 120 }}
             options={[
               { value: '1', label: '学习中' },
@@ -102,6 +102,7 @@ export default connect(mapStateToProps)(props => {
               { value: '0', label: '未开始' },
               { value: '3', label: '失败' },
             ]}
+            onSelect={(value) => onSearch(value)}
           />
           <Button type="primary" onClick={() => onSearch()}>
             查询

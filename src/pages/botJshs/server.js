@@ -19,8 +19,8 @@ export default class Server {
         });
     }
     // post
-    static async get(params) {
-        return request(`${url}njsj/get`, {
+    static async getUser(params) {
+        return request(`${url}jshs/getUser`, {
             method: 'post',
             body: stringify(params),
         });
