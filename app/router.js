@@ -37,5 +37,9 @@ module.exports = app => {
 
   router.post('/jshs/uploadUserList', controller.haishi.uploadFile.uploadFiles_stream);
   router.post('/jshs/getUser', controller.haishi.user.getUser);
+  router.post('/jshs/updateUser', controller.haishi.user.updateUser);
+  router.post('/jshs/addProject', controller.haishi.user.addProject);
+  router.post('/jshs/updateProject', controller.haishi.user.updateProject);
+  router.post('/jshs/getProject', controller.haishi.user.getProject);
 
 };
