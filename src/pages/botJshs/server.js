@@ -4,9 +4,8 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 export default class Server {
     // post
-    static async create(params) {
-        console.log(params);
-        return request(`${url}njsj/create`, {
+    static async getProject(params) {
+        return request(`${url}jshs/getProject`, {
             method: 'post',
             body: stringify(params),
         });

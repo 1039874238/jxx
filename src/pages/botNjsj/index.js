@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:08:09
- * @LastEditTime: 2023-02-28 16:55:44
+ * @LastEditTime: 2023-03-01 14:00:17
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\home\index.js
@@ -17,7 +17,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(props => {
-  const [status, setStatus] = useState('1');
+  const [status, setStatus] = useState('2');
   const [tableList, setTableList] = useState([]);
   const [tableHeight, setTableHeight] = useState('100px');
   const [memberVisible, setmemberVisible] = useState(false);

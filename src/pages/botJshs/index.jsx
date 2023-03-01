@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMount } from 'ahooks';
 import { connect } from 'dva';
-import { Button, Space, Upload,message,Table,Select } from 'antd';
+import { Button, Space, Upload,message,Table,Select,Drawer  } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 const mapStateToProps = state => ({
@@ -9,8 +9,11 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(props => {
-  const [status, setStatus] = useState('1');
+  const [status, setStatus] = useState('2');
   const [loadingTable, setloadingTable] = useState(false);
+  const [detailVisible, setdetailVisible] = useState(false);
+  const [detailList, setdetailList] = useState([]);
+  const [detailLoading, setdetailLoading] = useState(false);
   const [tableList, setTableList] = useState([]);
   const [tableHeight, setTableHeight] = useState('100px');
   const watchStatus = {
@@ -29,6 +32,38 @@ export default connect(mapStateToProps)(props => {
       title: '状态',
       dataIndex: 'status',
       render: (text, record, index) => watchStatus[text],
+    },
+    {
+      title: '开始时间',
+      dataIndex: 'startTime',
+    },
+    {
+      title: '结束时间',
+      dataIndex: 'endTime',
+    },
+    {
+      title: '操作',
+      dataIndex: 'idCard',
+      render: (text, record, index) => <Button type='link' onClick={()=>{openDetail(text)}}>详情</Button>
+    },
+  ];
+  const detailColumns = [
+    {
+      title: '课程名称',
+      dataIndex: 'projectName',
+    },
+    {
+      title: '学习时间',
+      dataIndex: 'needTime',
+      render: (text, record, index) => `${text}小时`,
+      width:100
+      
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      render: (text, record, index) => watchStatus[text],
+      width:80
     },
     {
       title: '开始时间',
@@ -60,11 +95,24 @@ export default connect(mapStateToProps)(props => {
         setTableHeight(height);
         onSearch();
       });
+      const openDetail = (studentId) =>{
+        setdetailVisible(true)
+        setdetailLoading(true)
+        props.dispatch({
+          type:'haishiModel/getProject',
+          payload:{
+            studentId
+          }
+        })
+        .then(res=>{
+          setdetailList(res.data)
+          setdetailLoading(false)
+        })
+      }
       const onSearch = (value = status) => {
         setStatus(value);
         setloadingTable(true);
         let payload = {};
-        console.log(value);
         if (value) {
           payload.status = value.trim();
         }
@@ -122,6 +170,19 @@ export default connect(mapStateToProps)(props => {
           }}
         />
       </div>
+      <Drawer title="详情" open={detailVisible} onClose={()=>setdetailVisible(false)} width="900">
+      <Table
+          loading={detailLoading}
+          bordered
+          size={'small'}
+          columns={detailColumns}
+          dataSource={detailList}
+          pagination={false}
+          scroll={{
+            y: tableHeight+20,
+          }}
+        />
+      </Drawer>
     </>
   );
 });

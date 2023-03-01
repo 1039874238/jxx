@@ -6,8 +6,8 @@ export default {
     data:'test'
   },
   effects: {
-    *create({ payload }, { call, put }) {
-      const res = yield call(Server.createProject, payload);
+    *getProject({ payload }, { call, put }) {
+      const res = yield call(Server.getProject, payload);
       return res;
     },
     *getUser({ payload }, { call, put }) {
