@@ -38,14 +38,18 @@ class uploadFileController extends Controller {
       }
       if (exceldata.length > 0) {
         // 将excel数据增添到库里
-        const students = [];
-        exceldata.forEach(item => {
-          const student = {};
-          student.idCard = item.idCard.toLocaleUpperCase();
-          student.password = item.password ? item.password : student.idCard.substring(student.idCard.length - 6);
-          students.push(student);
-        });
-        ctx.service.haishi.addUser({ students });
+        try {
+          const students = [];
+          exceldata.forEach(item => {
+            const student = {};
+            student.idCard = item.idCard.toLocaleUpperCase();
+            student.password = item.password ? item.password : student.idCard.substring(student.idCard.length - 6);
+            students.push(student);
+          });
+          ctx.service.haishi.addUser({ students });
+        } catch (err) {
+          console.log(err);
+        }
       }
     });
   }
