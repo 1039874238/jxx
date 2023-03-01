@@ -29,10 +29,14 @@ class HaishiService extends Service {
     });
     let msg = '新建成功';
     if (project.length > 0) {
+      await this.ctx.model.ProjectJshs.updateOne(
+        { studentId: params.studentId, projectId: params.projectId },
+        { $set: { status: '1', startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), endTime: '' } }
+      );
       msg = '已存在';
     } else {
       await this.ctx.model.ProjectJshs.insertMany([
-        { ...params, startTime: dayjs().format('YYYY-MM-DD HH:mm:ss') },
+        { ...params, startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), status: '1' },
       ]);
     }
     this.ctx.body = {
