@@ -1,12 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-02-06 14:32:54
+ * @LastEditTime: 2023-03-02 15:36:13
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
+let target = 'http://120.48.37.141/api'
+// let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
   routes: [
@@ -51,7 +53,7 @@ export default {
   history:'hash',
   proxy: {
     "/api": {
-      "target": "http://localhost:7001",
+      "target": target,
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
     }

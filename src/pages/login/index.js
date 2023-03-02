@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:03:48
- * @LastEditTime: 2023-02-06 10:54:16
+ * @LastEditTime: 2023-03-02 15:55:27
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\login\index.js
@@ -87,7 +87,7 @@ class Login extends Component {
         return (
             <div style={{ height: '100%', paddingTop: '200px' }} className={Styles.login_page}>
                 <div className={Styles.login_box}>
-                    <Card>
+                    <Card bordered={false}>
                         <h1>
                             {isLogin ? '登录' : '注册'}
                         </h1>
@@ -122,10 +122,10 @@ class Login extends Component {
                             </Form.Item>
                             <Form.Item>
                                 <div style={{ textAlign: 'center' }}>
-                                    <Button type="primary" htmlType="submit" className="login-form-button" loading={this.state.loginLoading}>
+                                    <Button type="primary" htmlType="submit" className="login-form-button" loading={this.state.loginLoading} style={{width:'100%'}}>
                                         {isLogin ? '登录' : '注册'}
                                     </Button>
-                                    <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button>
+                                    {/* <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button> */}
                                 </div>
                                 <br />
                             </Form.Item>
