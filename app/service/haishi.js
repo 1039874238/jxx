@@ -68,7 +68,7 @@ class HaishiService extends Service {
   async getProject(params) {
     const output = await this.ctx.model.ProjectJshs.find({
       studentId: params.studentId,
-    });
+    }).sort({ startTime: -1 });
     this.ctx.body = {
       state: 200,
       data: output,
@@ -78,7 +78,7 @@ class HaishiService extends Service {
   async getUser(params) {
     const output = await this.ctx.model.StudentsJshs.find({
       status: params.status,
-    });
+    }).sort({ startTime: -1 });
     this.ctx.body = {
       state: 200,
       data: output,
