@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-03-02 15:58:23
+ * @LastEditTime: 2023-03-07 09:56:27
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -17,9 +17,9 @@ const { Header, Content } = Layout;
 const mainMenu = [
   { label: '南审', key: '/botNjsj' },
   { label: '海事', key: '/botJshs' },
+  { label: '南工', key: '/botNgd' },
 ];
-console.log(window.location.hash.replace('#', ''));
-const defaultSelectedKeys = window.location.hash.replace('#', '') ==='/login'? '/botNjsj':window.location.hash.replace('#', '');
+const defaultSelectedKeys = window.location.hash.replace('#', '');
 
 @connect(({ loginModel }) => ({
   ...loginModel,
@@ -63,10 +63,10 @@ class BasicLayout extends React.Component {
   };
   render() {
     const optionItem = [
-      {
-        label: '个人信息',
-        key: '1',
-      },
+      // {
+      //   label: '个人信息',
+      //   key: '1',
+      // },
       {
         label: '注销',
         key: '2',
