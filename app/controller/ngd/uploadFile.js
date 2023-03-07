@@ -42,7 +42,7 @@ class uploadFileController extends Controller {
           const students = [];
           exceldata.forEach(item => {
             const student = {};
-            student.idCard = item.idCard.toLocaleUpperCase();
+            student.idCard = item.account.toString().toLocaleUpperCase();
             student.password = item.password ? item.password : exceldata[0].password;
             students.push(student);
           });
