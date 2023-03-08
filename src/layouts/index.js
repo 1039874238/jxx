@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-03-07 09:56:27
+ * @LastEditTime: 2023-03-08 11:41:49
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -35,6 +35,7 @@ class BasicLayout extends React.Component {
         loginUser: sessionStorage.getItem('roles'),
       },
     });
+    router.push(defaultSelectedKeys);
   }
   changeRoter = e => {
     router.push(e.key);

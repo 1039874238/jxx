@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useMount } from 'ahooks';
 import { connect } from 'dva';
-import { Button, Space, Upload,message,Table,Select,Drawer  } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Space, Upload,message,Table,Select,Drawer ,Input } from 'antd';
+import { UploadOutlined,EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 const mapStateToProps = state => ({
   ...state.haishiModel,
@@ -25,8 +25,18 @@ export default connect(mapStateToProps)(props => {
   };
   const columns = [
     {
-      title: '用户ID',
+      title: '用户账号',
       dataIndex: 'idCard',
+    },
+    {
+      title: '用户密码',
+      dataIndex: 'password',
+      render: (text, record, index) => <Input.Password
+      value={text}
+      bordered={false}
+      readOnly
+      iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+    />,
     },
     {
       title: '状态',
@@ -55,7 +65,7 @@ export default connect(mapStateToProps)(props => {
     {
       title: '学习时间',
       dataIndex: 'needTime',
-      render: (text, record, index) => `${text}小时`,
+      render: (text, record, index) => `${Math.ceil(Number(text))}小时`,
       width:100
       
     },
@@ -84,9 +94,12 @@ export default connect(mapStateToProps)(props => {
             console.log(info.file, info.fileList);
           }
           if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
+            message.success(`${info.file.name} 上传成功`);
+            if(status==='0'){
+              onSearch('0')
+            }
           } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+            message.error(`${info.file.name} 上传失败`);
           }
         },
       };
@@ -147,7 +160,7 @@ export default connect(mapStateToProps)(props => {
           />
           <Button type="primary" onClick={() => onSearch()}>查询</Button>
           <Upload {...configProps}>
-            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            <Button icon={<UploadOutlined />}>导入</Button>
           </Upload>
           {/* <Button type="primary">新增</Button> */}
         </Space>
