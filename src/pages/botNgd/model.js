@@ -10,6 +10,10 @@ export default {
       const res = yield call(Server.getProject, payload);
       return res;
     },
+    *updateUser({ payload }, { call, put }) {
+      const res = yield call(Server.updateUser, payload);
+      return res;
+    },
     *getUser({ payload }, { call, put }) {
       const res = yield call(Server.getUser, payload);
       return res;

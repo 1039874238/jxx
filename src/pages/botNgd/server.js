@@ -11,6 +11,13 @@ export default class Server {
         });
     }
     // post
+    static async updateUser(params) {
+        return request(`${url}ngd/updateUser`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
     static async getUser(params) {
         return request(`${url}ngd/getUser`, {
             method: 'post',
