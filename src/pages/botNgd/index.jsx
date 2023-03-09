@@ -65,23 +65,11 @@ export default connect(mapStateToProps)(props => {
       title: '学习时间',
       dataIndex: 'needTime',
       render: (text, record, index) => `${Math.ceil(Number(text))}分钟`,
-      width:100
-      
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      render: (text, record, index) => watchStatus[text],
-      width:80
     },
     {
       title: '开始时间',
       dataIndex: 'startTime',
-    },
-    {
-      title: '结束时间',
-      dataIndex: 'endTime',
-    },
+    }
   ];
     const configProps = {
         name: 'students',
