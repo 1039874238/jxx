@@ -31,7 +31,7 @@ class NgdService extends Service {
     if (project.length > 0) {
       await this.ctx.model.ProjectNgd.updateOne(
         { studentId: params.studentId, projectId: params.projectId },
-        { $set: { status: '1', startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), endTime: '' } }
+        { $set: { status: '1', startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), endTime: '', ...params } }
       );
       msg = '已存在';
     } else {
