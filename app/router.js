@@ -49,4 +49,18 @@ module.exports = app => {
   router.post('/ngd/updateProject', controller.ngd.user.updateProject);
   router.post('/ngd/getProject', controller.ngd.user.getProject);
 
+  router.post('/zgyk/uploadUserList', controller.zgyk.uploadFile.uploadFiles_stream);
+  router.post('/zgyk/getUser', controller.zgyk.user.getUser);
+  router.post('/zgyk/updateUser', controller.zgyk.user.updateUser);
+  router.post('/zgyk/addProject', controller.zgyk.user.addProject);
+  router.post('/zgyk/updateProject', controller.zgyk.user.updateProject);
+  router.post('/zgyk/getProject', controller.zgyk.user.getProject);
+
+  router.post('/nky/uploadUserList', controller.nky.uploadFile.uploadFiles_stream);
+  router.post('/nky/getUser', controller.nky.user.getUser);
+  router.post('/nky/updateUser', controller.nky.user.updateUser);
+  router.post('/nky/addProject', controller.nky.user.addProject);
+  router.post('/nky/updateProject', controller.nky.user.updateProject);
+  router.post('/nky/getProject', controller.nky.user.getProject);
+
 };
