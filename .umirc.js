@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-04-03 13:44:24
+ * @LastEditTime: 2023-04-03 16:34:57
  * @LastEditors: 1039874238 1039874238@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
@@ -37,6 +37,10 @@ export default {
         {
           path: '/botZgyk',
           component: '../pages/botZgyk'
+        },
+        {
+          path: '/botNky',
+          component: '../pages/botNky'
         },
       ]
     }

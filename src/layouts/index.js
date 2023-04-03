@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-04-03 13:50:20
+ * @LastEditTime: 2023-04-03 16:35:32
  * @LastEditors: 1039874238 1039874238@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -19,6 +19,7 @@ const mainMenu = [
   { label: '海事', key: '/botJshs' },
   { label: '南工', key: '/botNgd' },
   { label: '药科', key: '/botZgyk' },
+  { label: '南科院', key: '/botNky' },
 ];
 const defaultSelectedKeys = window.location.hash.replace('#', '');
 
