@@ -46,7 +46,7 @@ class uploadFileController extends Controller {
             student.password = item.password ? item.password : exceldata[0].password;
             students.push(student);
           });
-          ctx.service.nky.addUser({ students });
+          ctx.service.zgyk.addUser({ students });
         } catch (err) {
           console.log(err);
         }

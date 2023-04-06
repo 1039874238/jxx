@@ -43,10 +43,10 @@ class uploadFileController extends Controller {
           exceldata.forEach(item => {
             const student = {};
             student.idCard = item.account.toString().toLocaleUpperCase();
-            student.password = item.password ? item.password : exceldata[0].password;
+            student.password = item.password.toString().toLocaleUpperCase().substring(item.password.length - 6);
             students.push(student);
           });
-          ctx.service.zgyk.addUser({ students });
+          ctx.service.nky.addUser({ students });
         } catch (err) {
           console.log(err);
         }
