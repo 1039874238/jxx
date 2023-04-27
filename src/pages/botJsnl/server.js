@@ -11,8 +11,8 @@ export default class Server {
         });
     }
     // post
-    static async update(params) {
-        return request(`${url}njsj/update`, {
+    static async updateUser(params) {
+        return request(`${url}jsnl/updateUser`, {
             method: 'post',
             body: stringify(params),
         });

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-04-27 10:32:50
+ * @LastEditTime: 2023-04-27 11:21:55
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -20,7 +20,7 @@ const mainMenu = [
   { label: '南工', key: '/botNgd' },
   { label: '药科', key: '/botZgyk' },
   { label: '南科院', key: '/botNky' },
-  { label: '江苏南林', key: '/botJsnl' },
+  { label: '农林', key: '/botJsnl' },
 ];
 const defaultSelectedKeys = window.location.hash.replace('#', '');
 
