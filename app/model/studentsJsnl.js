@@ -10,5 +10,5 @@ module.exports = app => {
     endTime: { type: String, default: '' },
     status: { type: String, default: '0' }, // 0 未开始 1 进行中 2 已完成 3 失败
   });
-  return mongoose.model('studentsModel', studentsSchema, 'studentsJsnl');
+  return mongoose.model('nlStudentsModel', studentsSchema, 'studentsJsnl');
 };
