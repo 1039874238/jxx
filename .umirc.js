@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-04-03 16:34:57
- * @LastEditors: 1039874238 1039874238@qq.com
+ * @LastEditTime: 2023-04-27 10:31:06
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
@@ -41,6 +41,10 @@ export default {
         {
           path: '/botNky',
           component: '../pages/botNky'
+        },
+        {
+          path: '/botJsnl',
+          component: '../pages/botJsnl'
         },
       ]
     }
