@@ -35,6 +35,11 @@ module.exports = app => {
   router.post('/njsj/update', controller.projectNjsj.updateProject);
   router.post('/njsj/getProjectWithCookie', controller.projectNjsj.getProjectWithCookie);
 
+  router.post('/ngc/create', controller.projectNgc.createProject);
+  router.post('/ngc/get', controller.projectNgc.getProject);
+  router.post('/ngc/update', controller.projectNgc.updateProject);
+  router.post('/ngc/getProjectWithCookie', controller.projectNgc.getProjectWithCookie);
+
   router.post('/jshs/uploadUserList', controller.haishi.uploadFile.uploadFiles_stream);
   router.post('/jshs/getUser', controller.haishi.user.getUser);
   router.post('/jshs/updateUser', controller.haishi.user.updateUser);

@@ -3,11 +3,11 @@ const Service = require('egg').Service;
 const request = require('request');
 const dayjs = require('dayjs');
 
-const getNjsjProject = cookie => {
+const getNgcProject = cookie => {
   return new Promise((resolve, reject) => {
     request(
       {
-        url: `https://degree.qingshuxuetang.com/njsj/Student/Course/CourseData?_t=${new Date().valueOf()}`,
+        url: `https://degree.qingshuxuetang.com/ngc/Student/Course/CourseData?_t=${new Date().valueOf()}`,
         headers: {
           accept: '*/*',
           'accept-language': 'zh-CN,zh;q=0.9',
@@ -24,7 +24,7 @@ const getNjsjProject = cookie => {
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
           cookie,
           Referer:
-            'https://degree.qingshuxuetang.com/njsj/Student/Course/CourseList',
+            'https://degree.qingshuxuetang.com/ngc/Student/Course/CourseList',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
         },
         body: null,
@@ -35,8 +35,7 @@ const getNjsjProject = cookie => {
           const result = JSON.parse(body).data.filter(
             item =>
               item.learnStatusName === '在修' &&
-              item.score !== 100 &&
-              item.courseName !== '南京审计大学党史知识竞赛'
+              item.score !== 100
           );
           resolve(result);
         } catch (e) {
@@ -47,10 +46,10 @@ const getNjsjProject = cookie => {
   });
 };
 
-class ProjectNgc extends Service {
+class Project extends Service {
   // 新建活动
   async createProject(params) {
-    await this.ctx.model.ProjectNjsj.insertMany(Object.values(params));
+    await this.ctx.model.ProjectNgc.insertMany(Object.values(params));
     this.ctx.body = {
       state: 200,
       msg: '新建成功',
@@ -61,9 +60,9 @@ class ProjectNgc extends Service {
   async getProject(params) {
     let output = [];
     if (params.status) {
-      output = await this.ctx.model.ProjectNjsj.find({ status: params.status });
+      output = await this.ctx.model.ProjectNgc.find({ status: params.status });
     } else {
-      output = await this.ctx.model.ProjectNjsj.find();
+      output = await this.ctx.model.ProjectNgc.find();
     }
     this.ctx.body = {
       state: 200,
@@ -85,7 +84,7 @@ class ProjectNgc extends Service {
         estimatedCompletionTime: params.estimatedCompletionTime,
       }),
     };
-    await this.ctx.model.ProjectNjsj.updateOne(
+    await this.ctx.model.ProjectNgc.updateOne(
       { _id: params.id },
       { $set: { ...editParams } }
     );
@@ -96,8 +95,8 @@ class ProjectNgc extends Service {
   }
 
   async getProjectWithCookie(params) {
-    const body = await getNjsjProject(params.cookie);
-    const project = await this.ctx.model.ProjectNjsj.find();
+    const body = await getNgcProject(params.cookie);
+    const project = await this.ctx.model.ProjectNgc.find();
     let result = [];
     if (body.length > 0) {
       result = body.map(item => {
@@ -128,4 +127,4 @@ class ProjectNgc extends Service {
     };
   }
 }
-module.exports = ProjectNgc;
+module.exports = Project;
