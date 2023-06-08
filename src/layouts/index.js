@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-04-27 11:21:55
+ * @LastEditTime: 2023-06-08 20:13:59
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -16,6 +16,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 const { Header, Content } = Layout;
 const mainMenu = [
   { label: '南审', key: '/botNjsj' },
+  { label: '南工程', key: '/botNgc' },
   { label: '海事', key: '/botJshs' },
   { label: '南工', key: '/botNgd' },
   { label: '药科', key: '/botZgyk' },
