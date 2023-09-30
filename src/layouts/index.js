@@ -15,13 +15,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 const { Header, Content } = Layout;
 const mainMenu = [
-  { label: '南审', key: '/botNjsj' },
-  { label: '南工程', key: '/botNgc' },
-  { label: '海事', key: '/botJshs' },
-  { label: '南工', key: '/botNgd' },
-  { label: '药科', key: '/botZgyk' },
-  { label: '南科院', key: '/botNky' },
-  { label: '农林', key: '/botJsnl' },
+  { label: '南工大', key: '/botNJTech' },
 ];
 const defaultSelectedKeys = window.location.hash.replace('#', '');
 

@@ -20,35 +20,11 @@ export default {
       routes: [
         {
           path: '/',
-          component: '../pages/botNjsj'
+          component: '../pages/botNJTech'
         },
         {
-          path: '/botNgc',
-          component: '../pages/botNgc'
-        },
-        {
-          path: '/botNjsj',
-          component: '../pages/botNjsj'
-        },
-        {
-          path: '/botJshs',
-          component: '../pages/botJshs'
-        },
-        {
-          path: '/botNgd',
-          component: '../pages/botNgd'
-        },
-        {
-          path: '/botZgyk',
-          component: '../pages/botZgyk'
-        },
-        {
-          path: '/botNky',
-          component: '../pages/botNky'
-        },
-        {
-          path: '/botJsnl',
-          component: '../pages/botJsnl'
+          path: '/botNJTech',
+          component: '../pages/botNJTech'
         },
       ]
     }

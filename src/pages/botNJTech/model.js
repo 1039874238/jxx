@@ -1,21 +1,21 @@
 import Server from './server';
 export default {
-  namespace: 'nkyModel',
+  namespace: 'techModel',
   state: {
     tableList:[],
     data:'test'
   },
   effects: {
-    *getProject({ payload }, { call, put }) {
-      const res = yield call(Server.getProject, payload);
+    *addBot({ payload }, { call, put }) {
+      const res = yield call(Server.addBot, payload);
       return res;
     },
-    *updateUser({ payload }, { call, put }) {
-      const res = yield call(Server.updateUser, payload);
+    *getBot({ payload }, { call, put }) {
+      const res = yield call(Server.getBot, payload);
       return res;
     },
-    *getUser({ payload }, { call, put }) {
-      const res = yield call(Server.getUser, payload);
+    *addBrowser({ payload }, { call, put }) {
+      const res = yield call(Server.addBrowser, payload);
       return res;
     },
     *update({ payload }, { call, put }) {
