@@ -24,4 +24,39 @@ export default class Server {
             body: stringify(params),
         });
     }
+    // post
+    static async deleteBrowser(params) {
+        return request(`${url}bot/deleteBrowser`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async updateStudents(params) {
+        return request(`${url}bot/updateStudents`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async getStudents(params) {
+        return request(`${url}bot/getStudents`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async getConfig(params) {
+        return request(`${url}bot/getConfig`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
+    static async updateConfig(params) {
+        return request(`${url}bot/updateConfig`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
 }

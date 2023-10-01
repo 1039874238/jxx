@@ -6,4 +6,4 @@
  * @Description: In User Settings Edit
  * @FilePath: \app\src\utils\urlConfig.js
  */
-export const url =  '/api/'
+export const url =  '/autoLearnApi/'

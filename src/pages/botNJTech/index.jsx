@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useMount } from 'ahooks';
 import { connect } from 'dva';
-import { Button, Switch, Upload, message, Table, Select, Modal, Input, Tabs, Card, Form, Tooltip, Empty, Row, Col } from 'antd';
-import { SearchOutlined, PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Switch, Upload, message, Modal, Input, Tabs, Card, Form, Tooltip, Empty, Row, Col, Popconfirm } from 'antd';
+import { PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, DeleteOutlined } from '@ant-design/icons';
 import Style from './index.less'
+import { Space } from 'antd';
+import DataManagement from './dataManagement';
+import Setting from './setting';
 
 const mapStateToProps = state => ({
   ...state.techModel,
@@ -27,11 +30,10 @@ export default connect(mapStateToProps)(props => {
   const [browserForm] = Form.useForm();
 
   const uploadProps = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
+    name: 'students',
+    accept: '.xlsx',
+    showUploadList: false,
+    action: 'autoLearnApi/bot/uploadUserList',
     onChange(info) {
       if (info.file.status === 'done') {
         message.success(`${info.file.name} 导入成功！`);
@@ -107,6 +109,22 @@ export default connect(mapStateToProps)(props => {
     setBrowserVisible(false);
   };
 
+  const deleteBrowser = (browser) => {
+    props.dispatch({
+      type: 'techModel/deleteBrowser',
+      payload: {
+        id: browser._id,
+        botName: browser.botName,
+        key: browser.key
+      }
+    })
+      .then(res => {
+        if (res.state === 200) {
+          getBot()
+        }
+      })
+  }
+
 
   const items = [
     {
@@ -115,9 +133,19 @@ export default connect(mapStateToProps)(props => {
       children: (
         <>
           <div className={Style.options}>
-            <Button type='primary' onClick={showModal}>新增</Button>
+            <Space>
+              <Button type='primary' onClick={showModal}>新增</Button>
+              <Upload {...uploadProps} data={{ type: '0' }}>
+                <Button icon={<CloudUploadOutlined />} >
+                  导入
+                </Button>
+              </Upload>
+              <Button type='primary' onClick={getBot}>刷新</Button>
+            </Space>
           </div>
           <div className={Style.botBox}>
+            {botList.length === 0 && <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+              <Empty /></div>}
             {botList.map(item => (
               <Card title={<>
                 <DesktopOutlined />
@@ -125,38 +153,46 @@ export default connect(mapStateToProps)(props => {
                   <span style={{ marginLeft: '8px' }}>{item.botName}</span>
                 </Tooltip>
               </>} extra={<>
-              <div style={{display:'flex'}}>
-                <Tooltip title="新增浏览器">
-                  {item?.browser.length < 8 && <Button type='link' icon={<PlusOutlined />} onClick={() => { openBroModel(item.botName) }} />}
-                </Tooltip>
-                <Tooltip title="导入数据">
-                  <Upload {...uploadProps}>
-                    <Button type='link' icon={<CloudUploadOutlined />} />
-                  </Upload>
-                </Tooltip>
-                <Tooltip title="删除">
-                  <Button type='link' icon={<DeleteOutlined />} />
-                </Tooltip>
-              </div>
+                <div style={{ display: 'flex' }}>
+                  <Tooltip title="新增浏览器">
+                    {item?.browser.length < 8 && <Button type='link' icon={<PlusOutlined />} onClick={() => { openBroModel(item.botName) }} />}
+                  </Tooltip>
+                  <Tooltip title="导入数据">
+                    <Upload {...uploadProps} data={{ type: '1', botName: item.botName }}>
+                      <Button type='link' icon={<CloudUploadOutlined />} />
+                    </Upload>
+                  </Tooltip>
+                  <Tooltip title="删除">
+                    {item.browser.length === 0 && <Button type='link' icon={<DeleteOutlined />} />}
+                  </Tooltip>
+                </div>
               </>} className={Style.botitems}>
                 {item?.browser.length === 0 ?
                   <Empty /> : <Row gutter={10}>
                     {item.browser.map(value => (
                       <Col span={24}>
                         <div className={Style.browserItem}>
-                          <div>
+                          <div className={value.status === '0' ? '' : Style.active}>
                             <ChromeOutlined />
                             <span style={{ marginLeft: '8px' }}>{value.key}</span>
                           </div>
                           <div style={{ display: 'flex' }}>
                             <Tooltip title="导入数据">
-                              <Upload {...uploadProps}>
+                              <Upload {...uploadProps} data={{ type: '2', botName: item.botName, key: value.key }}>
                                 <Button type='link' icon={<CloudUploadOutlined />} />
                               </Upload>
                             </Tooltip>
-                            <Tooltip title="删除">
-                              <Button type='link' icon={<DeleteOutlined />} />
-                            </Tooltip>
+                            <Popconfirm
+                              title="此操作将删除该浏览器及该浏览器下所有的数据"
+                              onConfirm={() => { deleteBrowser(value) }}
+                              okText="确认"
+                              cancelText="取消"
+                            >
+                              <Tooltip title="删除">
+                                <Button disabled={value.status === '1'} type='link' icon={<DeleteOutlined />} />
+                              </Tooltip>
+                            </Popconfirm>
+
                           </div>
                         </div>
                       </Col>
@@ -175,9 +211,16 @@ export default connect(mapStateToProps)(props => {
       key: 2,
       children: (
         <>
-          <div className={Style.options}>
-            <Button type='primary'>新增</Button>
-          </div>
+          <DataManagement />
+        </>
+      ),
+    },
+    {
+      label: `设置`,
+      key: 3,
+      children: (
+        <>
+          <Setting />
         </>
       ),
     }

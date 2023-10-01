@@ -7,7 +7,7 @@
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
-// let target = 'http://120.48.37.141/api'
+// let target = 'http://120.48.37.141/autoLearnApi'
 let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
@@ -48,10 +48,10 @@ export default {
   publicPath:'./',
   history:'hash',
   proxy: {
-    "/api": {
+    "/autoLearnApi": {
       "target": target,
       "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+      "pathRewrite": { "^/autoLearnApi" : "" }
     }
   }
 }
