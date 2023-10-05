@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useMount } from 'ahooks';
 import { connect } from 'dva';
 import { Button, Switch, Upload, message, Modal, Input, Tabs, Card, Form, Tooltip, Empty, Row, Col, Popconfirm } from 'antd';
-import { PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Style from './index.less'
 import { Space } from 'antd';
 import DataManagement from './dataManagement';
@@ -26,6 +26,8 @@ export default connect(mapStateToProps)(props => {
   const [browserVisible, setBrowserVisible] = useState(false);
   const [botName, setBotName] = useState('');
   const [botList, setBotList] = useState([])
+  const [browserType, setBrowserType] = useState('new')
+  const [browserId, setBrowserId] = useState(null)
   const [botForm] = Form.useForm();
   const [browserForm] = Form.useForm();
 
@@ -57,7 +59,18 @@ export default connect(mapStateToProps)(props => {
         setBotList(res.data)
       })
   }
-  const openBroModel = (botName) => {
+  const openBroModel = (botName, type, row) => {
+    setBrowserType(type)
+    if (type === 'edit') {
+      setBrowserId(row._id)
+      browserForm.setFieldsValue({
+        key: row.key,
+        path: row.path,
+        model: row.model === 'new' ? false : true
+      })
+    } else {
+      setBrowserId(null)
+    }
     setBotName(botName)
     setBrowserVisible(true)
   }
@@ -86,8 +99,13 @@ export default connect(mapStateToProps)(props => {
     browserForm
       .validateFields()
       .then((values) => {
-        console.log(values);
         const params = { ...values, botName }
+        if (browserType === 'edit') {
+          params.id = browserId
+        }
+        if (!params.model) {
+          params.model = 'new'
+        }
         props.dispatch({
           type: 'techModel/addBrowser',
           payload: params
@@ -107,6 +125,8 @@ export default connect(mapStateToProps)(props => {
   const handleCancel = () => {
     setIsModalOpen(false);
     setBrowserVisible(false);
+    botForm.resetFields();
+    browserForm.resetFields();
   };
 
   const deleteBrowser = (browser) => {
@@ -155,7 +175,7 @@ export default connect(mapStateToProps)(props => {
               </>} extra={<>
                 <div style={{ display: 'flex' }}>
                   <Tooltip title="新增浏览器">
-                    {item?.browser.length < 8 && <Button type='link' icon={<PlusOutlined />} onClick={() => { openBroModel(item.botName) }} />}
+                    {item?.browser.length < 8 && <Button type='link' icon={<PlusOutlined />} onClick={() => { openBroModel(item.botName, 'new') }} />}
                   </Tooltip>
                   <Tooltip title="导入数据">
                     <Upload {...uploadProps} data={{ type: '1', botName: item.botName }}>
@@ -181,6 +201,9 @@ export default connect(mapStateToProps)(props => {
                               <Upload {...uploadProps} data={{ type: '2', botName: item.botName, key: value.key }}>
                                 <Button type='link' icon={<CloudUploadOutlined />} />
                               </Upload>
+                            </Tooltip>
+                            <Tooltip title="修改">
+                              <Button type='link' icon={<EditOutlined />} onClick={() => { openBroModel(item.botName, 'edit', value) }} />
                             </Tooltip>
                             <Popconfirm
                               title="此操作将删除该浏览器及该浏览器下所有的数据"
@@ -269,7 +292,7 @@ export default connect(mapStateToProps)(props => {
               },
             ]}
           >
-            <Input />
+            <Input disabled={browserType === 'edit'} />
           </Form.Item>
           <Form.Item
             name="path"
@@ -285,6 +308,7 @@ export default connect(mapStateToProps)(props => {
           <Form.Item
             name="model"
             label="调试模式"
+            valuePropName="checked"
           >
             <Switch />
           </Form.Item>

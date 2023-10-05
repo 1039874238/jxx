@@ -62,10 +62,6 @@ class BasicLayout extends React.Component {
   };
   render() {
     const optionItem = [
-      // {
-      //   label: '个人信息',
-      //   key: '1',
-      // },
       {
         label: '注销',
         key: '2',
