@@ -125,7 +125,7 @@ class Login extends Component {
                                     <Button type="primary" htmlType="submit" className="login-form-button" loading={this.state.loginLoading} style={{width:'100%'}}>
                                         {isLogin ? '登录' : '注册'}
                                     </Button>
-                                    {/* <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button> */}
+                                    <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button>
                                 </div>
                                 <br />
                             </Form.Item>
