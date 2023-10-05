@@ -26,15 +26,6 @@ class BasicLayout extends React.Component {
   state = {
     showRightBox: false,
   };
-  componentDidMount() {
-    this.props.dispatch({
-      type: 'loginModel/save',
-      payload: {
-        loginUser: sessionStorage.getItem('roles'),
-      },
-    });
-    router.push(defaultSelectedKeys);
-  }
   changeRoter = e => {
     router.push(e.key);
   };
@@ -61,17 +52,6 @@ class BasicLayout extends React.Component {
     message.success('退出成功！');
   };
   render() {
-    const optionItem = [
-      {
-        label: '注销',
-        key: '2',
-      },
-    ];
-    let userEle = (
-      <div style={{ width: '100px' }}>
-        <Menu onClick={this.handleOption} items={optionItem} />
-      </div>
-    );
     return (
       <ConfigProvider locale={zhCN}>
         <Layout>
@@ -89,14 +69,12 @@ class BasicLayout extends React.Component {
               </Col>
               <Col span={2}>
                 <div style={{ textAlign: 'right' }}>
-                  <Dropdown overlay={userEle} placement="bottom">
                     <div>
                       <Avatar
                         size={32}
                         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                       />
                     </div>
-                  </Dropdown>
                 </div>
               </Col>
             </Row>

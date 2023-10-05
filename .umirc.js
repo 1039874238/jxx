@@ -12,10 +12,8 @@ let target = 'http://192.168.31.76/autoLearnApi'
 export default {
   treeShaking: true,
   routes: [
-    { path: '/login', component: '../pages/login' },
     {
       path: '/',
-      Routes: ['./src/utils/auth.js'],
       component: '../layouts/index', 
       routes: [
         {
