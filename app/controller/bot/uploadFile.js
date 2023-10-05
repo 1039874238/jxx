@@ -10,6 +10,7 @@ class uploadFileController extends Controller {
    * 这里使用的是stream
    */
   async uploadFiles_stream() {
+    // 获取额外参数
     this.uploadFileStream();
     this.ctx.body = {
       code: 200,
@@ -20,10 +21,11 @@ class uploadFileController extends Controller {
   // stream 获取上传文件，然后解析存库
   async uploadFileStream() {
     const { ctx } = this;
+    
     const stream = await ctx.getFileStream();
     // 存储获取到的数据
     let exceldata = [];
-    stream.on('data', function(chunk) {
+    stream.on('data', function (chunk) {
       // 读取内容
       const workbook = xlsx.read(chunk, { type: 'buffer' });
       // 遍历每张工作表进行读取（这里默认只读取第一张表）
@@ -42,11 +44,11 @@ class uploadFileController extends Controller {
           const students = [];
           exceldata.forEach(item => {
             const student = {};
-            student.idCard = item.account.toString().toLocaleUpperCase();
-            student.password = item.password.toString().toLocaleUpperCase().substring(item.password.length - 6);
+            student.account = item.account.toString().trim();
+            student.password = item.password.trim();
             students.push(student);
           });
-          ctx.service.nky.addUser({ students });
+          ctx.service.bot.addStudents({ students,...stream.fields });
         } catch (err) {
           console.log(err);
         }
