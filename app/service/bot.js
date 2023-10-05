@@ -239,7 +239,7 @@ class Bots extends Service {
                 }
                 if (config.notice) {
                     const { wxCompanyId, wxAppId, wxSecret } = config
-                    let content = 'Auto Learn 通知：'
+                    let content = `Auto Learn 通知 (${dayjs().format('YYYY-MM-DD HH:mm:ss')}):`
                     needNotice.forEach(item => {
                         content += `\n [${item.botName}(${item.key})] 停止运行！`
                     })
