@@ -18,6 +18,13 @@ export default class Server {
         });
     }
     // post
+    static async deleteBot(params) {
+        return request(`${url}bot/deleteBot`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
+    // post
     static async addBrowser(params) {
         return request(`${url}bot/addBrowser`, {
             method: 'post',

@@ -7,8 +7,8 @@
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
-let target = 'http://192.168.31.76/autoLearnApi'
-// let target = 'http://localhost:7001/'
+// let target = 'http://192.168.31.76/autoLearnApi'
+let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
   routes: [

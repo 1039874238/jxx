@@ -129,6 +129,23 @@ export default connect(mapStateToProps)(props => {
     browserForm.resetFields();
   };
 
+  const deleteBot = (botName) => {
+    props.dispatch({
+      type: 'techModel/deleteBot',
+      payload: {
+        botName
+      }
+    })
+      .then(res => {
+        if (res.state === 200) {
+          getBot()
+          message.success(res.msg)
+        } else {
+          message.error(res.msg)
+        }
+      })
+  }
+
   const deleteBrowser = (browser) => {
     props.dispatch({
       type: 'techModel/deleteBrowser',
@@ -183,7 +200,7 @@ export default connect(mapStateToProps)(props => {
                     </Upload>
                   </Tooltip>
                   <Tooltip title="删除">
-                    {item.browser.length === 0 && <Button type='link' icon={<DeleteOutlined />} />}
+                    {item.browser.length === 0 && <Button type='link' icon={<DeleteOutlined />} onClick={() => { deleteBot(item.botName) }} />}
                   </Tooltip>
                 </div>
               </>} className={Style.botitems}>

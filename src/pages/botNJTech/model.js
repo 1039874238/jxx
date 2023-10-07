@@ -14,6 +14,10 @@ export default {
       const res = yield call(Server.getBot, payload);
       return res;
     },
+    *deleteBot({ payload }, { call, put }) {
+      const res = yield call(Server.deleteBot, payload);
+      return res;
+    },
     *addBrowser({ payload }, { call, put }) {
       const res = yield call(Server.addBrowser, payload);
       return res;
