@@ -6,7 +6,7 @@ const Subscription = require('egg').Subscription;
 class WatchBrowser extends Subscription {
   static get schedule() {
     return {
-      interval: '30m',
+      interval: '5m',
       type: 'all',
     };
   }
