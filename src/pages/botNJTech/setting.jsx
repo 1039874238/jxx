@@ -1,6 +1,6 @@
 import { connect } from 'dva';
 import { useMount } from 'ahooks';
-import { Form, Input, Button, message, Switch } from 'antd';
+import { Form, Input, Button, message, Switch,InputNumber  } from 'antd';
 import { useState } from 'react';
 const mapStateToProps = state => ({
     ...state.techModel,
@@ -45,6 +45,7 @@ export default connect(mapStateToProps)(props => {
             .then(res => {
                 if (res.data.length > 0) {
                     settingForm.setFieldsValue({
+                      maxRunNum: res.data[0].maxRunNum,
                         apiKey: res.data[0].apiKey,
                         notice: res.data[0].notice,
                         wxCompanyId: res.data[0].wxCompanyId,
@@ -59,6 +60,17 @@ export default connect(mapStateToProps)(props => {
     return (
         <>
             <Form layout={'vertical'} form={settingForm}>
+                <Form.Item
+                    name="maxRunNum"
+                    label="最大执行脚本数量"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <InputNumber min={1} max={1000} precision={0}/>
+                </Form.Item>
                 <Form.Item
                     name="apiKey"
                     label="验证码识别Key"
