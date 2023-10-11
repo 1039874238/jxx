@@ -253,12 +253,10 @@ class Bots extends Service {
         }
         if (config.notice) {
           const { wxCompanyId, wxAppId, wxSecret } = config;
-          let content = 'Auto Learn 通知:';
-          needNotice.forEach(item => {
-            content += `\n [${item.botName}(${item.key})] `;
-          });
-          content += '\n 以上脚本停止运行，请注意查看！';
-          content += `\n 当前剩余运行脚本数量:${browsers.length - needNotice.length};`;
+          let content = 'Auto Learn 通知：';
+          content += `\n ${needNotice.length}个脚本停止运行，稍后将自动重启；`;
+          content += `\n 当前剩余运行脚本数量：${browsers.length - needNotice.length}；`;
+          content += '\n 提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量；';
           content += `\n ${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
@@ -274,6 +272,26 @@ class Bots extends Service {
       state: 200,
       msg: '成功',
     };
+  }
+
+  async getAllowRunStatus() {
+    const configList = await this.ctx.model.BotConfig.find();
+    const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+    let config = {};
+    if (configList.length > 0) {
+      config = configList[0];
+    }
+    if (config.maxRunNum - browsers.length > 0) {
+      this.ctx.body = {
+        state: 200,
+        msg: '可以运行',
+      };
+    } else {
+      this.ctx.body = {
+        state: 201,
+        msg: '不可以运行',
+      };
+    }
   }
 
   async getBot(params) {

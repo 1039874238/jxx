@@ -4,7 +4,7 @@
  * @param {Egg.Application} app - egg application
  */
 module.exports = app => {
-  const { router, controller, jwt } = app;
+  const { router, controller } = app;
 
   router.post('/registered', controller.user.registered);
   router.post('/login', controller.user.login);
@@ -23,6 +23,7 @@ module.exports = app => {
   router.post('/bot/deleteBrowser', controller.bot.index.deleteBrowser);
   router.post('/bot/getConfig', controller.bot.index.getConfig);
   router.post('/bot/updateConfig', controller.bot.index.updateConfig);
+  router.post('/bot/getAllowRunStatus', controller.bot.index.getAllowRunStatus);
   router.post('/bot/uploadUserList', controller.bot.uploadFile.uploadFiles_stream);
 
 };
