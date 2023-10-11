@@ -8,7 +8,7 @@ module.exports = app => {
     wxCompanyId: { type: String },
     wxAppId: { type: String },
     wxSecret: { type: String },
-    runMax: { type: Number, default: 70 },
+    maxRunNum: { type: Number, default: 70 },
   });
   return mongoose.model('BotConfigModel', botConfigSchema, 'botConfig');
 };
