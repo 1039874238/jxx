@@ -364,7 +364,7 @@ class Bots extends Service {
       }
       if (browser.length > 0 && apiKey) {
         if (params.init) { // 初始化将该设备下的浏览器置为未执行
-          await this.ctx.model.BotBrowser.updateMany({ botName: params.botName }, { $set: { status: 0 } });
+          await this.ctx.model.BotBrowser.updateMany({ botName: params.botName }, { $set: { status: '0' } });
         }
         this.ctx.body = {
           state: 200,
