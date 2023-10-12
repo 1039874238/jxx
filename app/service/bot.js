@@ -252,11 +252,11 @@ class Bots extends Service {
           config = configList[0];
         }
         if (config.notice) {
-          const { wxCompanyId, wxAppId, wxSecret } = config;
+          const { wxCompanyId, wxAppId, wxSecret, maxRunNum } = config;
           let content = 'Auto Learn 通知：\n';
           content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
           content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
-          content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${config.maxRunNum}；\n`;
+          content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
           content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
