@@ -252,13 +252,14 @@ class Bots extends Service {
         if (configList.length > 0) {
           config = configList[0];
         }
+        const { wxCompanyId, wxAppId, wxSecret, maxRunNum } = config;
+        let content = 'Auto Learn 通知：\n';
+        content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
+        content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
+        content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
+        content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
+        await this.ctx.model.BotLog.insertMany([{ type: 'checkBrowser', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }])
         if (config.notice) {
-          const { wxCompanyId, wxAppId, wxSecret, maxRunNum } = config;
-          let content = 'Auto Learn 通知：\n';
-          content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
-          content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
-          content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
-          content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
             WX_COMPANY_ID: wxCompanyId,
@@ -288,23 +289,23 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
+      const { wxCompanyId, wxAppId, wxSecret } = config;
+      // 当前在线
+      const students = await this.ctx.model.BotStudents.find();
+      // 昨日完成
+      const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+      const yesterdayComplate = students.filter(item => item.status === '2' && item.endTime && item.endTime.indexOf(yesterday) > -1);
+      const failStudents = students.filter(item => item.status === '3');
+      const allComplate = students.filter(item => item.status === '2');
+
+      let content = 'Auto Learn 通知：\n';
+      content += `昨日完成：${yesterdayComplate.length};\n`;
+      content += `当前失败：${failStudents.length};\n`;
+      content += `未完成：${students.length - allComplate.length};\n`;
+      content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
+      content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
+      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }])
       if (config.notice) {
-        const { wxCompanyId, wxAppId, wxSecret } = config;
-        // 当前在线
-        const students = await this.ctx.model.BotStudents.find();
-        // 昨日完成
-        const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
-        const yesterdayComplate = students.filter(item => item.status === '2' && item.endTime && item.endTime.indexOf(yesterday) > -1);
-        const failStudents = students.filter(item => item.status === '3');
-        const allComplate = students.filter(item => item.status === '2');
-
-        let content = 'Auto Learn 通知：\n';
-        content += `昨日完成：${yesterdayComplate.length};\n`;
-        content += `当前失败：${failStudents.length};\n`;
-        content += `未完成：${students.length - allComplate.length};\n`;
-        content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
-        content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-
         this.ctx.helper.WxNotify({
           WX_COMPANY_ID: wxCompanyId,
           WX_APP_ID: wxAppId,
