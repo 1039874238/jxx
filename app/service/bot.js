@@ -139,7 +139,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([ params ]);
+      await this.ctx.model.Bot.insertMany([params]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -183,7 +183,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([ params ]);
+        await this.ctx.model.BotBrowser.insertMany([params]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -285,7 +285,8 @@ class Bots extends Service {
         const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
         const students = await this.ctx.model.BotStudents.find();
         // 昨日完成
-        const yesterdayComplate = students.filter(item => item.status === '2' && dayjs(item.endTime).isYesterday());
+        const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+        const yesterdayComplate = students.filter(item => item.status === '2' && item.endTime && item.endTime.indexOf(yesterday) > -1);
         const failStudents = students.filter(item => item.status === '3');
         const allComplate = students.filter(item => item.status === '2');
 
@@ -400,7 +401,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([ params ]);
+      await this.ctx.model.BotConfig.insertMany([params]);
     }
     this.ctx.body = {
       state: 200,
