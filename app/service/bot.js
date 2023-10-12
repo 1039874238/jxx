@@ -276,13 +276,20 @@ class Bots extends Service {
 
   async sendDayLog() {
     const configList = await this.ctx.model.BotConfig.find();
+    const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+    const overBrowser = []
+    for (let index = 0; index < browsers.length; index++) {
+      if (dayjs().diff(dayjs(browsers[index].runTime), 'minutes') > 10) {
+        await this.ctx.model.BotBrowser.updateOne({ _id: browsers[index]._id }, { $set: { status: '0' } });
+        overBrowser.push(browsers[index]);
+      }
+    }
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
       if (config.notice) {
         const { wxCompanyId, wxAppId, wxSecret } = config;
         // 当前在线
-        const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
         const students = await this.ctx.model.BotStudents.find();
         // 昨日完成
         const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
@@ -294,7 +301,7 @@ class Bots extends Service {
         content += `昨日完成：${yesterdayComplate.length};\n`;
         content += `当前失败：${failStudents.length};\n`;
         content += `未完成：${students.length - allComplate.length};\n`;
-        content += `当前在线Bot：${browsers.length};\n`;
+        content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
 
         this.ctx.helper.WxNotify({
