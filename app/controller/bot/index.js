@@ -75,6 +75,10 @@ class BotController extends Controller {
     const { ctx } = this;
     await ctx.service.bot.getAllowRunStatus();
   }
+  async checkBrowser() {
+    const { ctx } = this;
+    await ctx.service.bot.checkBrowser();
+  }
 
 }
 module.exports = BotController;

@@ -253,11 +253,11 @@ class Bots extends Service {
         }
         if (config.notice) {
           const { wxCompanyId, wxAppId, wxSecret } = config;
-          let content = 'Auto Learn 通知：';
-          content += `\n ${needNotice.length}个脚本停止运行，稍后将自动重启；`;
-          content += `\n 当前剩余运行脚本数量：${browsers.length - needNotice.length}；`;
-          content += '\n 提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量；';
-          content += `\n ${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
+          let content = 'Auto Learn 通知：\n';
+          content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
+          content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
+          content += '提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量；\n';
+          content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
             WX_COMPANY_ID: wxCompanyId,
@@ -272,6 +272,43 @@ class Bots extends Service {
       state: 200,
       msg: '成功',
     };
+  }
+
+  async sendDayLog() {
+    const configList = await this.ctx.model.BotConfig.find();
+    let config = {};
+    if (configList.length > 0) {
+      config = configList[0];
+      if (config.notice) {
+        const { wxCompanyId, wxAppId, wxSecret } = config;
+        // 当前在线
+        const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+        const students = await this.ctx.model.BotStudents.find();
+        // 昨日完成
+        const yesterdayComplate = students.filter(item => item.status === '2' && dayjs(item.endTime).isYesterday());
+        const failStudents = students.filter(item => item.status === '3');
+        const allComplate = students.filter(item => item.status === '2');
+
+        let content = 'Auto Learn 通知：\n';
+        content += `昨日完成：${yesterdayComplate.length};\n`;
+        content += `当前失败：${failStudents.length};\n`;
+        content += `未完成：${students.length - allComplate.length};\n`;
+        content += `当前在线Bot：${browsers.length};\n`;
+        content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
+
+        this.ctx.helper.WxNotify({
+          WX_COMPANY_ID: wxCompanyId,
+          WX_APP_ID: wxAppId,
+          WX_APP_SECRET: wxSecret,
+          content,
+        });
+      }
+    }
+    this.ctx.body = {
+      state: 200,
+      msg: '成功',
+    };
+
   }
 
   async getAllowRunStatus() {
@@ -326,6 +363,9 @@ class Bots extends Service {
         apiKey = configList[0].apiKey;
       }
       if (browser.length > 0 && apiKey) {
+        if (params.init) { // 初始化将该设备下的浏览器置为未执行
+          await this.ctx.model.BotBrowser.updateMany({ botName: params.botName }, { $set: { status: 0 } });
+        }
         this.ctx.body = {
           state: 200,
           data: browser,

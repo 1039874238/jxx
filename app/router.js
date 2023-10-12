@@ -21,6 +21,7 @@ module.exports = app => {
   router.post('/bot/deleteBot', controller.bot.index.deleteBot);
   router.post('/bot/setBrowserStatus', controller.bot.index.setBrowserStatus);
   router.post('/bot/deleteBrowser', controller.bot.index.deleteBrowser);
+  router.post('/bot/checkBrowser', controller.bot.index.checkBrowser);
   router.post('/bot/getConfig', controller.bot.index.getConfig);
   router.post('/bot/updateConfig', controller.bot.index.updateConfig);
   router.post('/bot/getAllowRunStatus', controller.bot.index.getAllowRunStatus);

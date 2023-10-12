@@ -6,12 +6,12 @@ const Subscription = require('egg').Subscription;
 class WatchBrowser extends Subscription {
   static get schedule() {
     return {
-      interval: '5m',
+      cron: '* * 7 * * ?',
       type: 'all',
     };
   }
   async subscribe() {
-    this.ctx.service.bot.checkBrowser();
+    this.ctx.service.bot.sendDayLog();
   }
 }
 module.exports = WatchBrowser;
