@@ -1,5 +1,6 @@
 'use strict';
 
+const await = require('await-stream-ready/lib/await');
 const dayjs = require('dayjs');
 const Service = require('egg').Service;
 
@@ -326,7 +327,20 @@ class Bots extends Service {
     if (configList.length > 0) {
       config = configList[0];
     }
-    if (config.maxRunNum - browsers.length > 0) {
+    // 查询运行中是否有执行结束的
+    let complateNum = 0
+    for (let index = 0; index < browsers.length; index++) {
+      const browser = browsers[index];
+      let student = await this.ctx.model.BotStudents.findOne({
+        status: '0',
+        botName: browser.botName,
+        browserKey: browser.key,
+      });
+      if (!student) { // 如果没有数据，可执行加1
+        complateNum++
+      }
+    }
+    if (config.maxRunNum + complateNum - browsers.length > 0) {
       this.ctx.body = {
         state: 200,
         msg: '可以运行',
