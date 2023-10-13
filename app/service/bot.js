@@ -339,6 +339,7 @@ class Bots extends Service {
         }
       }
       config = configList[0];
+      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: complateNum.toString() }]);
       this.updateConfig({ id: config._id, complateNum });
     }
     this.ctx.body = {
