@@ -7,7 +7,7 @@ class WatchBrowser extends Subscription {
   static get schedule() {
     return {
       cron: '0 0 8 * * ?',
-      type: 'all',
+      type: 'worker',
     };
   }
   async subscribe() {
