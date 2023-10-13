@@ -9,6 +9,7 @@ module.exports = app => {
     wxAppId: { type: String },
     wxSecret: { type: String },
     maxRunNum: { type: Number, default: 70 },
+    complateNum: { type: Number, default: 0 },
   });
   return mongoose.model('BotConfigModel', botConfigSchema, 'botConfig');
 };

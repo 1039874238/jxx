@@ -1,6 +1,5 @@
 'use strict';
 
-const await = require('await-stream-ready/lib/await');
 const dayjs = require('dayjs');
 const Service = require('egg').Service;
 
@@ -140,7 +139,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([params]);
+      await this.ctx.model.Bot.insertMany([ params ]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -184,7 +183,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([params]);
+        await this.ctx.model.BotBrowser.insertMany([ params ]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -258,7 +257,7 @@ class Bots extends Service {
         content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
         content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-        await this.ctx.model.BotLog.insertMany([{ type: 'checkBrowser', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }])
+        await this.ctx.model.BotLog.insertMany([{ type: 'checkBrowser', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
@@ -279,7 +278,7 @@ class Bots extends Service {
   async sendDayLog() {
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
-    const overBrowser = []
+    const overBrowser = [];
     for (let index = 0; index < browsers.length; index++) {
       if (dayjs().diff(dayjs(browsers[index].runTime), 'minutes') > 10) {
         await this.ctx.model.BotBrowser.updateOne({ _id: browsers[index]._id }, { $set: { status: '0' } });
@@ -293,7 +292,7 @@ class Bots extends Service {
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
-      const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD')
+      const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
       const yesterdayComplate = students.filter(item => item.status === '2' && item.endTime && item.endTime.indexOf(yesterday) > -1);
       const failStudents = students.filter(item => item.status === '3');
       const allComplate = students.filter(item => item.status === '2');
@@ -304,7 +303,7 @@ class Bots extends Service {
       content += `未完成：${students.length - allComplate.length};\n`;
       content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
       content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }])
+      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
         this.ctx.helper.WxNotify({
           WX_COMPANY_ID: wxCompanyId,
@@ -321,6 +320,33 @@ class Bots extends Service {
 
   }
 
+  async setComplateNum() {
+    const configList = await this.ctx.model.BotConfig.find();
+    let config = {};
+    if (configList.length > 0) {
+      const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+      // 查询运行中是否有执行结束的
+      let complateNum = 0;
+      for (let index = 0; index < browsers.length; index++) {
+        const browser = browsers[index];
+        const student = await this.ctx.model.BotStudents.findOne({
+          status: '0',
+          botName: browser.botName,
+          browserKey: browser.key,
+        });
+        if (!student) { // 如果没有数据，可执行加1
+          complateNum++;
+        }
+      }
+      config = configList[0];
+      this.updateConfig({ id: config._id, complateNum });
+    }
+    this.ctx.body = {
+      state: 200,
+      msg: '成功',
+    };
+  }
+
   async getAllowRunStatus() {
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
@@ -328,20 +354,8 @@ class Bots extends Service {
     if (configList.length > 0) {
       config = configList[0];
     }
-    // 查询运行中是否有执行结束的
-    let complateNum = 0
-    for (let index = 0; index < browsers.length; index++) {
-      const browser = browsers[index];
-      let student = await this.ctx.model.BotStudents.findOne({
-        status: '0',
-        botName: browser.botName,
-        browserKey: browser.key,
-      });
-      if (!student) { // 如果没有数据，可执行加1
-        complateNum++
-      }
-    }
-    if (config.maxRunNum + complateNum - browsers.length > 0) {
+    const { maxRunNum = 70, complateNum = 0 } = config;
+    if (maxRunNum + complateNum - browsers.length > 0) {
       this.ctx.body = {
         state: 200,
         msg: '可以运行',
@@ -423,7 +437,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([params]);
+      await this.ctx.model.BotConfig.insertMany([ params ]);
     }
     this.ctx.body = {
       state: 200,
