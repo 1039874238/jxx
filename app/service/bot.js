@@ -73,15 +73,17 @@ class Bots extends Service {
       browserKey: params.browserKey,
     });
     if (output.length > 0) {
+      const editParams = [];
       for (let index = 0; index < output.length; index++) {
-        await this.ctx.model.BotStudents.updateOne(
-          { _id: output[index]._id },
-          {
-            $set: {
-              status: '0',
-              startTime: '',
-            },
-          });
+        editParams.push({ _id: output[index]._id });
+      }
+      if (editParams.length) {
+        await this.ctx.model.BotStudents.updateMany({ $or: editParams }, {
+          $set: {
+            status: '0',
+            startTime: '',
+          },
+        });
       }
     }
     this.ctx.body = {
@@ -239,13 +241,16 @@ class Bots extends Service {
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
     if (browsers.length > 0) {
       const needNotice = [];
+      const editParams = [];
       for (let index = 0; index < browsers.length; index++) {
         if (dayjs().diff(dayjs(browsers[index].runTime), 'minutes') > 10) {
-          await this.ctx.model.BotBrowser.updateOne({ _id: browsers[index]._id }, { $set: { status: '0' } });
+          editParams.push({ _id: browsers[index]._id });
           needNotice.push(browsers[index]);
         }
       }
+
       if (needNotice.length > 0) {
+        await this.ctx.model.BotBrowser.updateMany({ $or: editParams }, { $set: { status: '0' } });
         const configList = await this.ctx.model.BotConfig.find();
         let config = {};
         if (configList.length > 0) {
@@ -330,9 +335,10 @@ class Bots extends Service {
       for (let index = 0; index < browsers.length; index++) {
         const browser = browsers[index];
         const student = await this.ctx.model.BotStudents.findOne({
-          status: '0',
-          botName: browser.botName,
-          browserKey: browser.key,
+          $and: [
+            { botName: browser.botName, browserKey: browser.key },
+            { $or: [{ status: '0' }, { status: '1' }] },
+          ],
         });
         if (!student) { // 如果没有数据，可执行加1
           complateNum++;
