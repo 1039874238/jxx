@@ -262,7 +262,7 @@ class Bots extends Service {
         content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
         content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-        await this.ctx.model.BotLog.insertMany([{ type: 'checkBrowser', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+        await this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
@@ -308,7 +308,7 @@ class Bots extends Service {
       content += `未完成：${students.length - allComplate.length};\n`;
       content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
       content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+      await this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
         this.ctx.helper.WxNotify({
           WX_COMPANY_ID: wxCompanyId,
@@ -345,7 +345,7 @@ class Bots extends Service {
         }
       }
       config = configList[0];
-      await this.ctx.model.BotLog.insertMany([{ type: 'sendDayLog', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: complateNum.toString() }]);
+      await this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: complateNum.toString() }]);
       this.updateConfig({ id: config._id, complateNum });
     }
     this.ctx.body = {
