@@ -35,7 +35,6 @@ export default connect(mapStateToProps)(props => {
   }
   const filterLog = (data = logList, value = keyWord) => {
     if (value) {
-      setKeyWord(value)
       setLogList(data.filter(item => item.content.indexOf(value) > -1))
     } else {
       setLogList(data)
@@ -45,7 +44,7 @@ export default connect(mapStateToProps)(props => {
     <>
       <div>
         <Space>
-          <Input type="text" style={{ width: 120 }} value={keyWord} onPressEnter={() => filterLog()} />
+          <Input type="text" style={{ width: 120 }} value={keyWord} onPressEnter={() => filterLog()} onChange={(e)=>{setKeyWord(e.target.value)}}/>
           <Button type="primary" onClick={queryLog}>查询</Button>
         </Space>
       </div>
