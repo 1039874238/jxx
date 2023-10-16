@@ -2,7 +2,7 @@ import { connect } from 'dva';
 import React, { useRef, useState } from 'react';
 import { useVirtualList, useMount } from 'ahooks';
 import Style from './index.less'
-import { Input, Space, Button } from 'antd'
+import { Input, Space, Button, Spin } from 'antd'
 
 const mapStateToProps = state => ({
   ...state.techModel,
@@ -13,6 +13,7 @@ export default connect(mapStateToProps)(props => {
   const wrapperRef = useRef(null);
   const [logList, setLogList] = useState([])
   const [keyWord, setKeyWord] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useMount(() => {
     queryLog()
@@ -26,6 +27,7 @@ export default connect(mapStateToProps)(props => {
   });
 
   const queryLog = () => {
+    setLoading(true)
     props.dispatch({
       type: 'techModel/queryLog',
     })
@@ -37,8 +39,9 @@ export default connect(mapStateToProps)(props => {
     if (keyWord) {
       setLogList(data.filter(item => item.content.indexOf(keyWord) > -1))
     } else {
-      queryLog()
+      setLogList(data)
     }
+    setLoading(false)
   }
   return (
     <>
@@ -49,6 +52,9 @@ export default connect(mapStateToProps)(props => {
         </Space>
       </div>
       <div ref={containerRef} className={Style.logBox} >
+        {
+          loading && <Spin />
+        }
         <div ref={wrapperRef}>
           {list.map((ele) => (
             <div
