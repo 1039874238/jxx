@@ -6,7 +6,7 @@ import { PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, Del
 import Style from './index.less'
 import { Space } from 'antd';
 import DataManagement from './dataManagement';
-import LogManagement from './logaManagement';
+import LogManagement from './logManagement';
 import Setting from './setting';
 
 const mapStateToProps = state => ({

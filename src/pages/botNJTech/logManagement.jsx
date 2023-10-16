@@ -1,5 +1,5 @@
 import { connect } from 'dva';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useVirtualList, useMount } from 'ahooks';
 
 const mapStateToProps = state => ({
@@ -46,7 +46,7 @@ export default connect(mapStateToProps)(props => {
               }}
               key={ele.index}
             >
-              Row: {ele.content}
+              Row: {ele.data.content}
             </div>
           ))}
         </div>
