@@ -1,6 +1,7 @@
 import { connect } from 'dva';
 import React, { useRef, useState } from 'react';
 import { useVirtualList, useMount } from 'ahooks';
+import Style from './index.less'
 
 const mapStateToProps = state => ({
   ...state.techModel,
@@ -18,7 +19,7 @@ export default connect(mapStateToProps)(props => {
   const [list] = useVirtualList(logList, {
     containerTarget: containerRef,
     wrapperTarget: wrapperRef,
-    itemHeight: 60,
+    itemHeight: 40,
     overscan: 10,
   });
 
@@ -32,21 +33,18 @@ export default connect(mapStateToProps)(props => {
   }
   return (
     <>
-      <div ref={containerRef} style={{ height: '300px', overflow: 'auto', border: '1px solid' }}>
+      <div ref={containerRef} className={Style.logBox} style={{ height: '300px', overflow: 'auto', border: '1px solid' }}>
         <div ref={wrapperRef}>
           {list.map((ele) => (
             <div
               style={{
-                height: 52,
+                height: 40,
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                border: '1px solid #e8e8e8',
-                marginBottom: 8,
               }}
               key={ele.index}
             >
-              Row: {ele.data.content}
+              {ele.data.content}
             </div>
           ))}
         </div>
