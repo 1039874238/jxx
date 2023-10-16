@@ -32,9 +32,15 @@
 }
 
 .logBox {
-  height: calc(100vh - 230px);
+  height: calc(100vh - 150px);
   overflow: auto;
   background-color: #000;
   color: #fff;
-  padding:10px;
+  padding: 10px;
+
+  .div {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 }
