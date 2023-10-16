@@ -33,9 +33,9 @@ export default connect(mapStateToProps)(props => {
         filterLog(res.data)
       })
   }
-  const filterLog = (data = logList, value = keyWord) => {
-    if (value) {
-      setLogList(data.filter(item => item.content.indexOf(value) > -1))
+  const filterLog = (data = logList) => {
+    if (keyWord) {
+      setLogList(data.filter(item => item.content.indexOf(keyWord) > -1))
     } else {
       setLogList(data)
     }
