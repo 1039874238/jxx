@@ -6,6 +6,7 @@ import { PlusOutlined, CloudUploadOutlined, DesktopOutlined, ChromeOutlined, Del
 import Style from './index.less'
 import { Space } from 'antd';
 import DataManagement from './dataManagement';
+import LogManagement from './logaManagement';
 import Setting from './setting';
 
 const mapStateToProps = state => ({
@@ -297,6 +298,15 @@ export default connect(mapStateToProps)(props => {
       children: (
         <>
           <DataManagement />
+        </>
+      ),
+    },
+    {
+      label: `日志`,
+      key: 4,
+      children: (
+        <>
+          <LogManagement />
         </>
       ),
     },

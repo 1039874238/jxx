@@ -42,6 +42,10 @@ export default {
       const res = yield call(Server.updateConfig, payload);
       return res;
     },
+    *queryLog({ payload }, { call, put }) {
+      const res = yield call(Server.queryLog, payload);
+      return res;
+    },
   },
   reducers: {
     save(state, { payload }) {

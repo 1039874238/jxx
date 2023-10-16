@@ -66,4 +66,11 @@ export default class Server {
             body: stringify(params),
         });
     }
+    // post
+    static async queryLog(params) {
+        return request(`${url}bot/queryLog`, {
+            method: 'post',
+            body: stringify(params),
+        });
+    }
 }
