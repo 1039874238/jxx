@@ -257,7 +257,7 @@ class Bots extends Service {
           config = configList[0];
         }
         const { wxCompanyId, wxAppId, wxSecret, maxRunNum } = config;
-        let content = 'Auto Learn 通知：\n';
+        let content = 'Auto Learn：\n';
         content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
         content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
         content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
@@ -281,14 +281,19 @@ class Bots extends Service {
   }
 
   async sendDayLog() {
+    await this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
     const overBrowser = [];
+    const editParams = [];
     for (let index = 0; index < browsers.length; index++) {
       if (dayjs().diff(dayjs(browsers[index].runTime), 'minutes') > 10) {
-        await this.ctx.model.BotBrowser.updateOne({ _id: browsers[index]._id }, { $set: { status: '0' } });
+        editParams.push({ _id: browsers[index]._id });
         overBrowser.push(browsers[index]);
       }
+    }
+    if (editParams.length > 0) {
+      await this.ctx.model.BotBrowser.updateMany({ $or: editParams }, { $set: { status: '0' } });
     }
     let config = {};
     if (configList.length > 0) {
@@ -302,10 +307,11 @@ class Bots extends Service {
       const failStudents = students.filter(item => item.status === '3');
       const allComplate = students.filter(item => item.status === '2');
 
-      let content = 'Auto Learn 通知：\n';
+      let content = 'Auto Learn：\n';
+      content += `共完成：${allComplate.length};\n`;
       content += `昨日完成：${yesterdayComplate.length};\n`;
-      content += `当前失败：${failStudents.length};\n`;
-      content += `未完成：${students.length - allComplate.length};\n`;
+      content += `未完成：${students.length - allComplate.length - failStudents.length};\n`;
+      content += `失败：${failStudents.length};\n`;
       content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
       content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
       await this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
@@ -327,29 +333,47 @@ class Bots extends Service {
 
   async setComplateNum() {
     const configList = await this.ctx.model.BotConfig.find();
-    let config = {};
     if (configList.length > 0) {
       const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
-      // 查询运行中是否有执行结束的
       let complateNum = 0;
-      for (let index = 0; index < browsers.length; index++) {
-        const browser = browsers[index];
+      for (const browser of browsers) {
         const student = await this.ctx.model.BotStudents.findOne({
           $and: [
             { botName: browser.botName, browserKey: browser.key },
-            { $or: [{ status: '0' }, { status: '1' }] },
+            { status: { $in: [ '0', '1' ] } },
           ],
         });
         if (!student) { // 如果没有数据，可执行加1
           complateNum++;
         }
       }
-      config = configList[0];
-      await this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: complateNum.toString() }]);
+      const config = configList[0];
+      const content = `当前运行中，有${complateNum}个任务执行完成;`;
+      await this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       this.updateConfig({ id: config._id, complateNum });
     }
     this.ctx.body = {
       state: 200,
+      msg: '成功',
+    };
+  }
+
+  async saveLog({ type, content }) {
+    await this.ctx.model.BotLog.insertMany([{ type, logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+    this.ctx.body = {
+      state: 200,
+      msg: '成功',
+    };
+  }
+  async queryLog({ type }) {
+    const query = {};
+    if (type) {
+      query.type = type;
+    }
+    const output = await this.ctx.model.BotLog.find(query).sort({ logTime: -1 });
+    this.ctx.body = {
+      state: 200,
+      data: output,
       msg: '成功',
     };
   }

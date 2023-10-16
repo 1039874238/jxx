@@ -25,6 +25,8 @@ module.exports = app => {
   router.post('/bot/getConfig', controller.bot.index.getConfig);
   router.post('/bot/updateConfig', controller.bot.index.updateConfig);
   router.post('/bot/getAllowRunStatus', controller.bot.index.getAllowRunStatus);
+  router.post('/bot/saveLog', controller.bot.index.saveLog);
+  router.post('/bot/queryLog', controller.bot.index.queryLog);
   router.post('/bot/uploadUserList', controller.bot.uploadFile.uploadFiles_stream);
 
 };

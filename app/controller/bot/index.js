@@ -66,6 +66,16 @@ class BotController extends Controller {
     const req = ctx.request.body;
     await ctx.service.bot.updateConfig(req);
   }
+  async saveLog() {
+    const { ctx } = this;
+    const req = ctx.request.body;
+    await ctx.service.bot.saveLog(req);
+  }
+  async queryLog() {
+    const { ctx } = this;
+    const req = ctx.request.body;
+    await ctx.service.bot.queryLog(req);
+  }
   async getConfig() {
     const { ctx } = this;
     const req = ctx.request.body;
