@@ -37,14 +37,14 @@ export default connect(mapStateToProps)(props => {
     if (keyWord) {
       setLogList(data.filter(item => item.content.indexOf(keyWord) > -1))
     } else {
-      setLogList(data)
+      queryLog()
     }
   }
   return (
     <>
-      <div>
+      <div style={{ paddingBottom: '12px' }}>
         <Space>
-          <Input type="text" style={{ width: 120 }} value={keyWord} onPressEnter={() => filterLog()} onChange={(e)=>{setKeyWord(e.target.value)}}/>
+          <Input type="text" style={{ width: 120 }} value={keyWord} onPressEnter={() => filterLog()} onChange={(e) => { setKeyWord(e.target.value) }} />
           <Button type="primary" onClick={queryLog}>查询</Button>
         </Space>
       </div>
