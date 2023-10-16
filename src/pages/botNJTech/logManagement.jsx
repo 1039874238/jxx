@@ -33,7 +33,7 @@ export default connect(mapStateToProps)(props => {
   }
   return (
     <>
-      <div ref={containerRef} className={Style.logBox} style={{ height: '300px', overflow: 'auto', border: '1px solid' }}>
+      <div ref={containerRef} className={Style.logBox} >
         <div ref={wrapperRef}>
           {list.map((ele) => (
             <div
