@@ -56,14 +56,23 @@ class Bots extends Service {
   }
 
   async getStudents(params) {
-    const output = await this.ctx.model.BotStudents.find({
-      status: params.status,
-    }).sort({ startTime: -1 });
-    this.ctx.body = {
-      state: 200,
-      data: output,
-      msg: '查询成功',
-    };
+    const configList = await this.ctx.model.BotConfig.find();
+    if (configList.length > 0 && configList[0].validata) {
+      const output = await this.ctx.model.BotStudents.find({
+        status: params.status,
+      }).sort({ startTime: -1 });
+      this.ctx.body = {
+        state: 200,
+        data: output,
+        msg: '查询成功',
+      };
+    } else {
+      this.ctx.body = {
+        state: 401,
+        data: [],
+        msg: '没有权限，联系管理员！',
+      };
+    }
   }
 
   async resetStudents(params) {
@@ -93,27 +102,36 @@ class Bots extends Service {
   }
 
   async getOneStudents(params) {
-    const output = await this.ctx.model.BotStudents.findOne({
-      status: '0',
-      botName: params.botName,
-      browserKey: params.browserKey,
-    });
-    if (output) {
-      await this.ctx.model.BotStudents.updateOne(
-        { _id: output._id },
-        {
-          $set: {
-            status: '1',
-            startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          },
-        }
-      );
+    const configList = await this.ctx.model.BotConfig.find();
+    if (configList.length > 0 && configList[0].validata) {
+      const output = await this.ctx.model.BotStudents.findOne({
+        status: '0',
+        botName: params.botName,
+        browserKey: params.browserKey,
+      });
+      if (output) {
+        await this.ctx.model.BotStudents.updateOne(
+          { _id: output._id },
+          {
+            $set: {
+              status: '1',
+              startTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            },
+          }
+        );
+      }
+      this.ctx.body = {
+        state: 200,
+        data: output,
+        msg: '查询成功',
+      };
+    } else {
+      this.ctx.body = {
+        state: 401,
+        data: {},
+        msg: '没有权限，联系管理员！',
+      };
     }
-    this.ctx.body = {
-      state: 200,
-      data: output,
-      msg: '查询成功',
-    };
   }
 
   async updateStudents(params) {
@@ -141,7 +159,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([ params ]);
+      await this.ctx.model.Bot.insertMany([params]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -185,7 +203,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([ params ]);
+        await this.ctx.model.BotBrowser.insertMany([params]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -281,6 +299,7 @@ class Bots extends Service {
   }
 
   async sendDayLog() {
+    const validata = await this.ctx.helper.validataServer()
     await this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
@@ -323,6 +342,7 @@ class Bots extends Service {
           content,
         });
       }
+      this.updateConfig({ id: config._id, validata })
     }
     this.ctx.body = {
       state: 200,
@@ -340,7 +360,7 @@ class Bots extends Service {
         const student = await this.ctx.model.BotStudents.findOne({
           $and: [
             { botName: browser.botName, browserKey: browser.key },
-            { status: { $in: [ '0', '1' ] } },
+            { status: { $in: ['0', '1'] } },
           ],
         });
         if (!student) { // 如果没有数据，可执行加1
@@ -380,75 +400,101 @@ class Bots extends Service {
 
   async getAllowRunStatus() {
     const configList = await this.ctx.model.BotConfig.find();
-    const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
-    let config = {};
-    if (configList.length > 0) {
-      config = configList[0];
-    }
-    const { maxRunNum = 70, complateNum = 0 } = config;
-    if (maxRunNum + complateNum - browsers.length > 0) {
-      this.ctx.body = {
-        state: 200,
-        msg: '可以运行',
-      };
+    if (configList.length > 0 && configList[0].validata) {
+
+      const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+      let config = {};
+      if (configList.length > 0) {
+        config = configList[0];
+      }
+      const { maxRunNum = 70, complateNum = 0 } = config;
+      if (maxRunNum + complateNum - browsers.length > 0) {
+        this.ctx.body = {
+          state: 200,
+          msg: '可以运行',
+        };
+      } else {
+        this.ctx.body = {
+          state: 201,
+          msg: '不可以运行',
+        };
+      }
     } else {
       this.ctx.body = {
-        state: 201,
-        msg: '不可以运行',
+        state: 401,
+        msg: '没有权限，联系管理员！',
       };
     }
   }
 
   async getBot(params) {
-    let bot = [];
-    if (params.botName) {
-      bot = await this.ctx.model.Bot.findOne({ botName: params.botName });
+    const configList = await this.ctx.model.BotConfig.find();
+    if (configList.length > 0 && configList[0].validata) {
+
+      let bot = [];
+      if (params.botName) {
+        bot = await this.ctx.model.Bot.findOne({ botName: params.botName });
+      } else {
+        bot = await this.ctx.model.Bot.find();
+      }
+      const output = [];
+      for (let index = 0; index < bot.length; index++) {
+        const browser = await this.ctx.model.BotBrowser.find({ botName: bot[index].botName });
+        output.push({
+          botName: bot[index].botName,
+          botKey: bot[index].botKey,
+          browser,
+        });
+      }
+      this.ctx.body = {
+        state: 200,
+        data: output,
+      };
     } else {
-      bot = await this.ctx.model.Bot.find();
+      this.ctx.body = {
+        state: 401,
+        data: [],
+        msg: '没有权限，联系管理员！',
+      };
     }
-    const output = [];
-    for (let index = 0; index < bot.length; index++) {
-      const browser = await this.ctx.model.BotBrowser.find({ botName: bot[index].botName });
-      output.push({
-        botName: bot[index].botName,
-        botKey: bot[index].botKey,
-        browser,
-      });
-    }
-    this.ctx.body = {
-      state: 200,
-      data: output,
-    };
   }
 
   async runBot(params) {
-    const bot = await this.ctx.model.Bot.findOne({ botName: params.botName, botKey: params.botKey });
-    if (bot) {
-      const browser = await this.ctx.model.BotBrowser.find({ botName: params.botName });
-      let apiKey = null;
-      const configList = await this.ctx.model.BotConfig.find();
-      if (configList.length > 0) {
-        apiKey = configList[0].apiKey;
-      }
-      if (browser.length > 0 && apiKey) {
-        if (params.init === 'true') { // 初始化将该设备下的浏览器置为未执行
-          await this.ctx.model.BotBrowser.updateMany({ botName: params.botName }, { $set: { status: '0' } });
+    const configList = await this.ctx.model.BotConfig.find();
+    if (configList.length > 0 && configList[0].validata) {
+      const bot = await this.ctx.model.Bot.findOne({ botName: params.botName, botKey: params.botKey });
+      if (bot) {
+        const browser = await this.ctx.model.BotBrowser.find({ botName: params.botName });
+        let apiKey = null;
+        const configList = await this.ctx.model.BotConfig.find();
+        if (configList.length > 0) {
+          apiKey = configList[0].apiKey;
         }
-        this.ctx.body = {
-          state: 200,
-          data: browser,
-          apiKey,
-        };
+        if (browser.length > 0 && apiKey) {
+          if (params.init === 'true') { // 初始化将该设备下的浏览器置为未执行
+            await this.ctx.model.BotBrowser.updateMany({ botName: params.botName }, { $set: { status: '0' } });
+          }
+          this.ctx.body = {
+            state: 200,
+            data: browser,
+            apiKey,
+          };
+        } else {
+          this.ctx.body = {
+            state: 202,
+            msg: '该设备没有可运行浏览器',
+          };
+        }
       } else {
         this.ctx.body = {
           state: 202,
-          msg: '该设备没有可运行浏览器',
+          msg: '设备不存在或密钥不正确',
         };
       }
     } else {
       this.ctx.body = {
-        state: 202,
-        msg: '设备不存在或密钥不正确',
+        state: 401,
+        msg: '没有权限，联系管理员！',
       };
     }
   }
@@ -468,7 +514,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([ params ]);
+      await this.ctx.model.BotConfig.insertMany([params]);
     }
     this.ctx.body = {
       state: 200,

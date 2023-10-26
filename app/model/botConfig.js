@@ -5,6 +5,7 @@ module.exports = app => {
   const botConfigSchema = new Schema({
     apiKey: { type: String },
     notice: { type: Boolean, default: false },
+    validata: { type: Boolean, default: true },
     wxCompanyId: { type: String },
     wxAppId: { type: String },
     wxSecret: { type: String },

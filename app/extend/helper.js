@@ -7,6 +7,24 @@ module.exports = {
   getToken(payload = {}, secret) {
     return jwt.sign(payload, secret, { expiresIn: '1h' });
   },
+  async validataServer() {
+    const BASE_URL = 'https://qyapi.weixin.qq.com';
+    let accessToken = false
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/cgi-bin/gettoken?corpid=wwb3c165816fdc331f&corpsecret=2lqY1kgBlhM8hv7rkojVtDLkY4DDnyksteL6ns5Phv8`,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      accessToken = response.data.access_token;
+    } catch (error) {
+      console.log(error);
+      accessToken = false
+    }
+    return accessToken ? true : false
+  },
   async WxNotify(payload) {
     const { WX_COMPANY_ID, WX_APP_SECRET, WX_APP_ID, content } = payload;
     try {
