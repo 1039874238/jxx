@@ -306,12 +306,33 @@ class Bots extends Service {
       let numOfBots = complateBot.length;
       let minCount = Math.min(botNum, numOfStudents, numOfBots);
 
+      const bulkUpdateOperations = [];
+
       for (let index = 0; index < minCount; index++) {
-        const student = students[index];
         const bot = complateBot[index];
-        await this.ctx.model.BotStudents.updateOne({ _id: student._id,status:'0' }, { botName: bot.botName, browserKey: bot.key })
+        const student1 = students[index * 2];
+        if (student1) {
+          bulkUpdateOperations.push({
+            updateOne: {
+              filter: { _id: student1._id, status: '0' },
+              update: { botName: bot.botName, browserKey: bot.key }
+            }
+          });
+        }
+        const student2 = students[(index * 2) + 1];
+        if (student2) {
+          bulkUpdateOperations.push({
+            updateOne: {
+              filter: { _id: student2._id, status: '0' },
+              update: { botName: bot.botName, browserKey: bot.key }
+            }
+          });
+        }
       }
-      this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: `${dayjs().format('YYYY-MM-DD HH:mm:ss')} ${minCount + 1} 个学生自动重新分配` }]);
+      if (bulkUpdateOperations.length > 0) {
+        await this.ctx.model.BotStudents.bulkWrite(bulkUpdateOperations);
+        this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: `${dayjs().format('YYYY-MM-DD HH:mm:ss')} ${bulkUpdateOperations.length} 个学生自动重新分配` }]);
+      }
     }
     this.ctx.body = {
       state: 200,
