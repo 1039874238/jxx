@@ -159,7 +159,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([params]);
+      await this.ctx.model.Bot.insertMany([ params ]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -203,7 +203,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([params]);
+        await this.ctx.model.BotBrowser.insertMany([ params ]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -274,11 +274,12 @@ class Bots extends Service {
         if (configList.length > 0) {
           config = configList[0];
         }
-        const { wxCompanyId, wxAppId, wxSecret, maxRunNum } = config;
+        const { wxCompanyId, wxAppId, wxSecret, maxRunNum, complateNum } = config;
         let content = 'Auto Learn：\n';
         content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
-        content += `当前剩余运行脚本数量：${browsers.length - needNotice.length}；\n`;
-        content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大执行脚本数量，当前配置为:${maxRunNum}；\n`;
+        content += `当前已完成脚本数量：${complateNum}；\n`;
+        content += `当前剩余运行脚本数量：${browsers.length - needNotice.length - complateNum}；\n`;
+        content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大运行脚本数量，当前配置为:${maxRunNum}；\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
         await this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
@@ -299,7 +300,7 @@ class Bots extends Service {
   }
 
   async sendDayLog() {
-    const validata = await this.ctx.helper.validataServer()
+    const validata = await this.ctx.helper.validataServer();
     await this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
@@ -317,7 +318,7 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
-      const { wxCompanyId, wxAppId, wxSecret } = config;
+      const { wxCompanyId, wxAppId, wxSecret, complateNum } = config;
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
@@ -331,8 +332,9 @@ class Bots extends Service {
       content += `昨日完成：${yesterdayComplate.length};\n`;
       content += `未完成：${students.length - allComplate.length - failStudents.length};\n`;
       content += `失败：${failStudents.length};\n`;
-      content += `当前在线Bot：${browsers.length - overBrowser.length};\n`;
-      content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
+      content += `已完成Bot：${complateNum};\n`;
+      content += `当前运行Bot：${browsers.length - overBrowser.length - complateNum};\n`;
+      content += `当前在线Bot：${browsers.length - overBrowser.length}。\n`;
       await this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
         this.ctx.helper.WxNotify({
@@ -342,7 +344,7 @@ class Bots extends Service {
           content,
         });
       }
-      this.updateConfig({ id: config._id, validata })
+      this.updateConfig({ id: config._id, validata });
     }
     this.ctx.body = {
       state: 200,
@@ -360,7 +362,7 @@ class Bots extends Service {
         const student = await this.ctx.model.BotStudents.findOne({
           $and: [
             { botName: browser.botName, browserKey: browser.key },
-            { status: { $in: ['0', '1'] } },
+            { status: { $in: [ '0', '1' ] } },
           ],
         });
         if (!student) { // 如果没有数据，可执行加1
@@ -370,7 +372,12 @@ class Bots extends Service {
       const config = configList[0];
       const content = `当前运行中，有${complateNum}个任务执行完成;`;
       await this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
-      this.updateConfig({ id: config._id, complateNum });
+      if (config.validata) {
+        this.updateConfig({ id: config._id, complateNum });
+      } else {
+        const validata = await this.ctx.helper.validataServer();
+        this.updateConfig({ id: config._id, complateNum, validata });
+      }
     }
     this.ctx.body = {
       state: 200,
@@ -514,7 +521,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([params]);
+      await this.ctx.model.BotConfig.insertMany([ params ]);
     }
     this.ctx.body = {
       state: 200,
