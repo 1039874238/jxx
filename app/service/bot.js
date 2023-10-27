@@ -159,7 +159,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([ params ]);
+      await this.ctx.model.Bot.insertMany([params]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -203,7 +203,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([ params ]);
+        await this.ctx.model.BotBrowser.insertMany([params]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -281,7 +281,7 @@ class Bots extends Service {
         content += `当前剩余运行脚本数量：${browsers.length - needNotice.length - complateNum}；\n`;
         content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大运行脚本数量，当前配置为:${maxRunNum}；\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
-        await this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+        this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
           // 处理通知逻辑
           this.ctx.helper.WxNotify({
@@ -299,9 +299,29 @@ class Bots extends Service {
     };
   }
 
+  async updataStudentsWithBot(botNum, complateBot) {
+    if (botNum > 0) {
+      let students = await this.ctx.model.BotStudents.find({ status: '0' }); // 未开始的
+      let numOfStudents = students.length;
+      let numOfBots = complateBot.length;
+      let minCount = Math.min(botNum, numOfStudents, numOfBots);
+
+      for (let index = 0; index < minCount; index++) {
+        const student = students[index];
+        const bot = complateBot[index];
+        await this.ctx.model.BotStudents.updateOne({ _id: student._id,status:'0' }, { botName: bot.botName, browserKey: bot.key })
+      }
+      this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content: `${dayjs().format('YYYY-MM-DD HH:mm:ss')} ${minCount + 1} 个学生自动重新分配` }]);
+    }
+    this.ctx.body = {
+      state: 200,
+      msg: '成功',
+    }
+  }
+
   async sendDayLog() {
     const validata = await this.ctx.helper.validataServer();
-    await this.ctx.model.BotLog.deleteMany({ type: '1' });
+    this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
     const overBrowser = [];
@@ -318,7 +338,7 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
-      const { wxCompanyId, wxAppId, wxSecret, complateNum } = config;
+      const { wxCompanyId, wxAppId, wxSecret, complateNum, maxRunNum } = config;
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
@@ -335,7 +355,7 @@ class Bots extends Service {
       content += `已完成Bot：${complateNum};\n`;
       content += `当前运行Bot：${browsers.length - overBrowser.length - complateNum};\n`;
       content += `当前在线Bot：${browsers.length - overBrowser.length}。\n`;
-      await this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+      this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
         this.ctx.helper.WxNotify({
           WX_COMPANY_ID: wxCompanyId,
@@ -357,21 +377,32 @@ class Bots extends Service {
     const configList = await this.ctx.model.BotConfig.find();
     if (configList.length > 0) {
       const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
+      const overBrowser = [];
+      for (let index = 0; index < browsers.length; index++) {
+        if (dayjs().diff(dayjs(browsers[index].runTime), 'minutes') > 10) {
+          overBrowser.push(browsers[index]);
+        }
+      }
       let complateNum = 0;
+      const complateBot = []
       for (const browser of browsers) {
         const student = await this.ctx.model.BotStudents.findOne({
           $and: [
             { botName: browser.botName, browserKey: browser.key },
-            { status: { $in: [ '0', '1' ] } },
+            { status: { $in: ['0', '1'] } },
           ],
         });
         if (!student) { // 如果没有数据，可执行加1
+          complateBot.push(browser)
           complateNum++;
         }
       }
       const config = configList[0];
+      if (complateNum > 0) {
+        this.updataStudentsWithBot(config.maxRunNum - (browsers.length - overBrowser.length - complateNum), complateBot)
+      }
       const content = `当前运行中，有${complateNum}个任务执行完成;`;
-      await this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+      this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.validata) {
         this.updateConfig({ id: config._id, complateNum });
       } else {
@@ -521,7 +552,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([ params ]);
+      await this.ctx.model.BotConfig.insertMany([params]);
     }
     this.ctx.body = {
       state: 200,
