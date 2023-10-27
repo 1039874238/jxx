@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 21:03:48
- * @LastEditTime: 2023-10-27 16:57:56
+ * @LastEditTime: 2023-10-27 17:02:53
  * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\src\pages\login\index.js
@@ -125,7 +125,7 @@ class Login extends Component {
                                     <Button type="primary" htmlType="submit" className="login-form-button" loading={this.state.loginLoading} style={{width:'100%'}}>
                                         {isLogin ? '登录' : '注册'}
                                     </Button>
-                                    <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button>
+                                    {/* <Button type='link' onClick={() => this.openModel()}>{isLogin ? "去注册" : '已有账号去登录'}</Button> */}
                                 </div>
                                 <br />
                             </Form.Item>
