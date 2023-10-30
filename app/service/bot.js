@@ -470,6 +470,7 @@ class Bots extends Service {
       if (maxRunNum + complateNum - browsers.length > 0) {
         this.ctx.body = {
           state: 200,
+          data: config,
           msg: '可以运行',
         };
       } else {
