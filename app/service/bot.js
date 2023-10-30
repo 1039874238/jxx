@@ -60,7 +60,7 @@ class Bots extends Service {
     if (configList.length > 0 && configList[0].validata) {
       const output = await this.ctx.model.BotStudents.find({
         status: params.status,
-      }).sort({ startTime: -1 });
+      }).sort({ startTime: 1 });
       this.ctx.body = {
         state: 200,
         data: output,
@@ -159,7 +159,7 @@ class Bots extends Service {
         msg: '该设备已存在',
       };
     } else {
-      await this.ctx.model.Bot.insertMany([params]);
+      await this.ctx.model.Bot.insertMany([ params ]);
       this.ctx.body = {
         state: 200,
         msg: '新建成功',
@@ -203,7 +203,7 @@ class Bots extends Service {
           msg: '操作失败',
         };
       } else {
-        await this.ctx.model.BotBrowser.insertMany([params]);
+        await this.ctx.model.BotBrowser.insertMany([ params ]);
         this.ctx.body = {
           state: 200,
           msg: '操作成功',
@@ -301,10 +301,10 @@ class Bots extends Service {
 
   async updataStudentsWithBot(botNum, complateBot) {
     if (botNum > 0) {
-      let students = await this.ctx.model.BotStudents.find({ status: '0' }); // 未开始的
-      let numOfStudents = students.length;
-      let numOfBots = complateBot.length;
-      let minCount = Math.min(botNum, numOfStudents, numOfBots);
+      const students = await this.ctx.model.BotStudents.find({ status: '0' }); // 未开始的
+      const numOfStudents = students.length;
+      const numOfBots = complateBot.length;
+      const minCount = Math.min(botNum, numOfStudents, numOfBots);
 
       const bulkUpdateOperations = [];
 
@@ -315,8 +315,8 @@ class Bots extends Service {
           bulkUpdateOperations.push({
             updateOne: {
               filter: { _id: student1._id, status: '0' },
-              update: { botName: bot.botName, browserKey: bot.key }
-            }
+              update: { botName: bot.botName, browserKey: bot.key },
+            },
           });
         }
         const student2 = students[(index * 2) + 1];
@@ -324,8 +324,8 @@ class Bots extends Service {
           bulkUpdateOperations.push({
             updateOne: {
               filter: { _id: student2._id, status: '0' },
-              update: { botName: bot.botName, browserKey: bot.key }
-            }
+              update: { botName: bot.botName, browserKey: bot.key },
+            },
           });
         }
       }
@@ -337,7 +337,7 @@ class Bots extends Service {
     this.ctx.body = {
       state: 200,
       msg: '成功',
-    }
+    };
   }
 
   async sendDayLog() {
@@ -359,7 +359,7 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
-      const { wxCompanyId, wxAppId, wxSecret, complateNum, maxRunNum } = config;
+      const { wxCompanyId, wxAppId, wxSecret, complateNum } = config;
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
@@ -405,22 +405,22 @@ class Bots extends Service {
         }
       }
       let complateNum = 0;
-      const complateBot = []
+      const complateBot = [];
       for (const browser of browsers) {
         const student = await this.ctx.model.BotStudents.findOne({
           $and: [
             { botName: browser.botName, browserKey: browser.key },
-            { status: { $in: ['0', '1'] } },
+            { status: { $in: [ '0', '1' ] } },
           ],
         });
         if (!student) { // 如果没有数据，可执行加1
-          complateBot.push(browser)
+          complateBot.push(browser);
           complateNum++;
         }
       }
       const config = configList[0];
       if (complateNum > 0) {
-        this.updataStudentsWithBot(config.maxRunNum - (browsers.length - overBrowser.length - complateNum), complateBot)
+        this.updataStudentsWithBot(config.maxRunNum - (browsers.length - overBrowser.length - complateNum), complateBot);
       }
       const content = `当前运行中，有${complateNum}个任务执行完成;`;
       this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
@@ -573,7 +573,7 @@ class Bots extends Service {
       delete params.id;
       await this.ctx.model.BotConfig.updateOne({ _id: id }, { $set: params });
     } else {
-      await this.ctx.model.BotConfig.insertMany([params]);
+      await this.ctx.model.BotConfig.insertMany([ params ]);
     }
     this.ctx.body = {
       state: 200,
