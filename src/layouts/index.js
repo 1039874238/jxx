@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-10-27 16:55:25
+ * @LastEditTime: 2023-10-30 17:25:01
  * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
@@ -26,52 +26,10 @@ class BasicLayout extends React.Component {
   state = {
     showRightBox: false,
   };
-  componentDidMount() {
-    this.props.dispatch({
-      type: 'loginModel/save',
-      payload: {
-        loginUser: sessionStorage.getItem('roles'),
-      },
-    });
-    router.push(defaultSelectedKeys);
-  }
   changeRoter = e => {
     router.push(e.key);
   };
-  handleOption = ({ key }) => {
-    switch (key) {
-      case '1':
-        console.log(1);
-        break;
-
-      default:
-        this.handleLogout();
-        break;
-    }
-  };
-  handleLogout = () => {
-    sessionStorage.setItem('roles', null);
-    this.props.dispatch({
-      type: 'loginModel/save',
-      payload: {
-        loginUser: null,
-      },
-    });
-    router.push('/login');
-    message.success('退出成功！');
-  };
   render() {
-    const optionItem = [
-      {
-        label: '注销',
-        key: '2',
-      },
-    ];
-    let userEle = (
-      <div style={{ width: '100px' }}>
-        <Menu onClick={this.handleOption} items={optionItem} />
-      </div>
-    );
     return (
       <ConfigProvider locale={zhCN}>
         <Layout>
@@ -89,14 +47,12 @@ class BasicLayout extends React.Component {
               </Col>
               <Col span={2}>
                 <div style={{ textAlign: 'right' }}>
-                  <Dropdown overlay={userEle} placement="bottom">
                     <div>
                       <Avatar
                         size={32}
                         src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                       />
                     </div>
-                  </Dropdown>
                 </div>
               </Col>
             </Row>
