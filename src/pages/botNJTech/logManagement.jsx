@@ -62,7 +62,11 @@ export default connect(mapStateToProps)(props => {
                 height: 40,
                 display: 'flex',
                 alignItems: 'center',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden'
               }}
+              title={ele.data.content}
               key={ele.index}
             >
               {`${ele.data.logTime} ${ele.data.content}`}
