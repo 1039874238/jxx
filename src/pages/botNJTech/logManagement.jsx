@@ -61,6 +61,7 @@ export default connect(mapStateToProps)(props => {
               style={{
                 height: 40,
                 display: 'flex',
+                width: '100%',
                 alignItems: 'center',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
