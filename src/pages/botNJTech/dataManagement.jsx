@@ -147,7 +147,7 @@ export default connect(mapStateToProps)(props => {
         break;
     }
     setColumns(newColumns)
-  }, [status])
+  }, [status,editId])
   useMount(() => {
     const height = window.innerHeight - 64 - 62 - 100;
     setTableHeight(height);
