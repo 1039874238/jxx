@@ -12,6 +12,7 @@ import {
 const mapStateToProps = state => ({
   ...state.techModel,
 });
+let newPassword = ''
 
 export default connect(mapStateToProps)(props => {
   const [status, setStatus] = useState('2');
@@ -19,8 +20,8 @@ export default connect(mapStateToProps)(props => {
   const [tableList, setTableList] = useState([]);
   const [tableHeight, setTableHeight] = useState('100px');
   const [editId, setEditId] = useState('');
-  const [newPassword, setNewPassword] = useState('');
   const [columns, setColumns] = useState([]);
+
   const watchStatus = {
     '0': '未开始',
     '1': '学习中',
@@ -52,7 +53,7 @@ export default connect(mapStateToProps)(props => {
                 bordered={false}
                 allowClear
                 onChange={e => {
-                  setNewPassword(e.target.value);
+                  newPassword = e.target.value;
                 }}
                 style={{ width: '80%' }}
                 onPressEnter={() => {
@@ -75,7 +76,7 @@ export default connect(mapStateToProps)(props => {
                 icon={<EditOutlined />}
                 onClick={() => {
                   setEditId(record._id);
-                  setNewPassword(text);
+                  newPassword = text
                 }}
               />
             ) : (
@@ -202,7 +203,7 @@ export default connect(mapStateToProps)(props => {
         if (res.state === 200) {
           setTableList(res.data);
           setEditId('');
-          setNewPassword('');
+          newPassword = ''
         }
       })
       .finally(_ => {

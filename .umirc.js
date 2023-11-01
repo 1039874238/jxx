@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-10-13 14:53:38
+ * @LastEditTime: 2023-11-01 14:45:51
  * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
-let target = 'http://192.168.31.76/autoLearnApi'
+let target = 'http://111.229.247.177/autoLearnApi'
 // let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
