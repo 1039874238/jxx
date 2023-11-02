@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-06-08 20:21:55
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-11-02 10:35:41
+ * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
-// let target = 'http://120.48.37.141/api'
+// let target = 'http://111.229.247.177/autoLearnApi'
 let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
@@ -16,7 +16,7 @@ export default {
     {
       path: '/',
       Routes: ['./src/utils/auth.js'],
-      component: '../layouts/index', 
+      component: '../layouts/index',
       routes: [
         {
           path: '/',
@@ -72,10 +72,10 @@ export default {
   publicPath:'./',
   history:'hash',
   proxy: {
-    "/api": {
+    "/autoLearnApi": {
       "target": target,
       "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+      "pathRewrite": { "^/autoLearnApi" : "" }
     }
   }
 }

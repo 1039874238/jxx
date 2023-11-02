@@ -167,7 +167,7 @@ export default connect(mapStateToProps)(props => {
     name: 'students',
     accept: '.xlsx',
     showUploadList: false,
-    action: 'api/ngd/uploadUserList',
+    action: 'autoLearnApi/ngd/uploadUserList',
     onChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList);

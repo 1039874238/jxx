@@ -174,7 +174,7 @@ export default connect(mapStateToProps)(props => {
       dataIndex: 'needTime',
       render: (text, record, index) => `${Math.ceil(Number(text))}小时`,
       width:100
-      
+
     },
     {
       title: '状态',
@@ -195,7 +195,7 @@ export default connect(mapStateToProps)(props => {
         name: 'students',
         accept:'.xlsx',
         showUploadList:false,
-        action: 'api/jshs/uploadUserList',
+        action: 'autoLearnApi/jshs/uploadUserList',
         onChange(info) {
           if (info.file.status !== 'uploading') {
             console.log(info.file, info.fileList);
