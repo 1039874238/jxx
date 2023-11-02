@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-12-16 15:45:37
- * @LastEditTime: 2023-06-08 20:13:59
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-11-02 11:18:45
+ * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \app\src\layouts\index.js
  */
@@ -22,8 +22,9 @@ const mainMenu = [
   { label: '药科', key: '/botZgyk' },
   { label: '南科院', key: '/botNky' },
   { label: '农林', key: '/botJsnl' },
+  { label: '南工业', key: '/botNJTech' },
 ];
-const defaultSelectedKeys = window.location.hash.replace('#', '');
+let defaultSelectedKeys = null;
 
 @connect(({ loginModel }) => ({
   ...loginModel,
@@ -39,6 +40,7 @@ class BasicLayout extends React.Component {
         loginUser: sessionStorage.getItem('roles'),
       },
     });
+    defaultSelectedKeys = window.location.hash.replace('#', '');
     router.push(defaultSelectedKeys);
   }
   changeRoter = e => {

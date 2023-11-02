@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2021-03-27 20:54:58
- * @LastEditTime: 2023-11-02 10:35:41
+ * @LastEditTime: 2023-11-02 11:10:14
  * @LastEditors: 1039874238 1039874237@qq.com
  * @Description: In User Settings Edit
  * @FilePath: \jxx-app\umiApp\.umirc.js
  */
 // ref: https://umijs.org/config/
-// let target = 'http://111.229.247.177/autoLearnApi'
-let target = 'http://localhost:7001/'
+let target = 'http://111.229.247.177/autoLearnApi'
+// let target = 'http://localhost:7001/'
 export default {
   treeShaking: true,
   routes: [
@@ -50,6 +50,10 @@ export default {
           path: '/botJsnl',
           component: '../pages/botJsnl'
         },
+        {
+          path: '/botNJTech',
+          component: '../pages/botNJTech'
+        },
       ]
     }
   ],
@@ -69,7 +73,7 @@ export default {
       },
     }],
   ],
-  publicPath:'./',
+  publicPath:'/',
   history:'hash',
   proxy: {
     "/autoLearnApi": {
