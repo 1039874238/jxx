@@ -10,7 +10,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@umijs/plugin-antd-mobile": "^1.2.0",
-    "ahooks": "^2.10.3",
+    "ahooks": "^3.7.7",
     "antd": "^4.14.1",
     "dayjs": "^1.10.4",
     "dva": "^2.4.1",
