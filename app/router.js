@@ -75,4 +75,24 @@ module.exports = app => {
   router.post('/nky/updateProject', controller.nky.user.updateProject);
   router.post('/nky/getProject', controller.nky.user.getProject);
 
+  router.post('/bot/addStudents', controller.bot.index.addStudents);
+  router.post('/bot/getStudents', controller.bot.index.getStudents);
+  router.post('/bot/getOneStudents', controller.bot.index.getOneStudents);
+  router.post('/bot/updateStudents', controller.bot.index.updateStudents);
+  router.post('/bot/resetStudents', controller.bot.index.resetStudents);
+  router.post('/bot/addBot', controller.bot.index.addBot);
+  router.post('/bot/addBrowser', controller.bot.index.addBrowser);
+  router.post('/bot/getBot', controller.bot.index.getBot);
+  router.post('/bot/runBot', controller.bot.index.runBot);
+  router.post('/bot/deleteBot', controller.bot.index.deleteBot);
+  router.post('/bot/setBrowserStatus', controller.bot.index.setBrowserStatus);
+  router.post('/bot/deleteBrowser', controller.bot.index.deleteBrowser);
+  router.post('/bot/checkBrowser', controller.bot.index.checkBrowser);
+  router.post('/bot/getConfig', controller.bot.index.getConfig);
+  router.post('/bot/updateConfig', controller.bot.index.updateConfig);
+  router.post('/bot/getAllowRunStatus', controller.bot.index.getAllowRunStatus);
+  router.post('/bot/saveLog', controller.bot.index.saveLog);
+  router.post('/bot/queryLog', controller.bot.index.queryLog);
+  router.post('/bot/uploadUserList', controller.bot.uploadFile.uploadFiles_stream);
+
 };
