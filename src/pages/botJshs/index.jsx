@@ -54,7 +54,7 @@ export default connect(mapStateToProps)(props => {
     '0': '未开始',
     '1': '学习中',
     '2': '已完成',
-    '3': '密码错误',
+    '3': '密码错误或个人信息未完善',
     '': null,
   };
   const columns = [
