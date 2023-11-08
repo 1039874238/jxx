@@ -422,8 +422,8 @@ class Bots extends Service {
       if (complateNum > 0) {
         this.updataStudentsWithBot(config.maxRunNum - (browsers.length - overBrowser.length - complateNum), complateBot);
       }
-      const content = `当前运行中，有${complateNum}个任务执行完成;`;
-      this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
+      // const content = `当前运行中，有${complateNum}个任务执行完成;`;
+      // this.ctx.model.BotLog.insertMany([{ type: '1', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.validata) {
         this.updateConfig({ id: config._id, complateNum });
       } else {
