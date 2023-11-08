@@ -47,7 +47,7 @@ export default connect(mapStateToProps)(props => {
     <>
       <div style={{ paddingBottom: '12px' }}>
         <Space>
-          <Input type="text" style={{ width: 120 }} value={keyWord}  onChange={(e) => { setKeyWord(e.target.value) }} />
+          <Input type="text" style={{ width: 120 }} value={keyWord} onChange={(e) => { setKeyWord(e.target.value) }} />
           <Button type="primary" onClick={queryLog}>查询</Button>
         </Space>
       </div>
@@ -61,11 +61,16 @@ export default connect(mapStateToProps)(props => {
               style={{
                 height: 40,
                 display: 'flex',
+                width: '100%',
                 alignItems: 'center',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden'
               }}
+              title={ele.data.content}
               key={ele.index}
             >
-              {ele.data.content}
+              {`${ele.data.logTime} ${ele.data.content}`}
             </div>
           ))}
         </div>
