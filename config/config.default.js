@@ -6,7 +6,7 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [ 'errorHandle' ];
   config.jwt = {
-    secret: 'secret', // 密钥
+    secret: 'JXXAPPSECRET', // 密钥
     ignore: [ /^\/login/, /^\/registered/ ], // 哪些请求不需要认证
   };
   config.security = {

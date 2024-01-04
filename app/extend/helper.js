@@ -5,7 +5,7 @@ const axios = require('axios');
 module.exports = {
   // 生成Token
   getToken(payload = {}, secret) {
-    return jwt.sign(payload, secret, { expiresIn: '1h' });
+    return jwt.sign(payload, secret, { expiresIn: '24h' });
   },
   async validataServer() {
     const BASE_URL = 'https://qyapi.weixin.qq.com';
