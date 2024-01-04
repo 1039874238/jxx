@@ -3,11 +3,10 @@ module.exports = app => {
   const { mongoose } = app;
   const { Schema } = mongoose;
   const newSchema = new Schema({
-    // 姓名
-    username: { type: String, required: true },
-    phone: { type: String, required: true },
-    type: { type: Number, default: 0 }, // 0普通用户 1 管理员 2超级管理员
-    password: { type: String, required: true },
+    receiver: { type: Array, require: true },
+    sender: { type: String, default: 'admin' },
+    message: { type: String, required: true },
+    sendTime: { type: String, required: true },
   });
   return mongoose.model('NoticeModel', newSchema, 'notice');
 };
