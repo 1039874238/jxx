@@ -275,7 +275,7 @@ class Bots extends Service {
           config = configList[0];
         }
         const { maxRunNum, complateNum } = config;
-        let content = 'Auto Learn：\n';
+        let content = 'Auto Learn(admin)：\n';
         content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
         content += `当前已完成脚本数量：${complateNum}；\n`;
         content += `当前剩余运行脚本数量：${browsers.length - needNotice.length - complateNum}；\n`;
@@ -362,7 +362,7 @@ class Bots extends Service {
       const failStudents = students.filter(item => item.status === '3');
       const allComplate = students.filter(item => item.status === '2');
 
-      let content = 'Auto Learn：\n';
+      let content = 'Auto Learn(admin)：\n';
       content += `共完成：${allComplate.length};\n`;
       content += `昨日完成：${yesterdayComplate.length};\n`;
       content += `未完成：${students.length - allComplate.length - failStudents.length};\n`;
