@@ -283,13 +283,7 @@ class Bots extends Service {
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
         this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
-          // 处理通知逻辑
-          this.ctx.helper.WxNotify({
-            WX_COMPANY_ID: wxCompanyId,
-            WX_APP_ID: wxAppId,
-            WX_APP_SECRET: wxSecret,
-            content,
-          });
+          this.ctx.service.notice.sendNotice({ message: content, receiver: '2' });
         }
       }
     }
@@ -341,7 +335,7 @@ class Bots extends Service {
   }
 
   async sendDayLog() {
-    const validata = await this.ctx.helper.validataServer();
+    const validata = await this.ctx.service.notice.validataServer();
     this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
@@ -378,12 +372,7 @@ class Bots extends Service {
       content += `当前在线Bot：${browsers.length - overBrowser.length}。\n`;
       this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
-        this.ctx.helper.WxNotify({
-          WX_COMPANY_ID: wxCompanyId,
-          WX_APP_ID: wxAppId,
-          WX_APP_SECRET: wxSecret,
-          content,
-        });
+        this.ctx.service.notice.sendNotice({ message: content, receiver: '2' });
       }
       this.updateConfig({ id: config._id, validata });
     }
@@ -427,7 +416,7 @@ class Bots extends Service {
       if (config.validata) {
         this.updateConfig({ id: config._id, complateNum });
       } else {
-        const validata = await this.ctx.helper.validataServer();
+        const validata = await this.ctx.service.notice.validataServer();
         this.updateConfig({ id: config._id, complateNum, validata });
       }
     }
