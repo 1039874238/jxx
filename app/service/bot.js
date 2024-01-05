@@ -274,22 +274,18 @@ class Bots extends Service {
         if (configList.length > 0) {
           config = configList[0];
         }
-        const { wxCompanyId, wxAppId, wxSecret, maxRunNum, complateNum } = config;
+        const { maxRunNum, complateNum } = config;
+        const currentRunNum = browsers.length - needNotice.length - complateNum;
         let content = 'Auto Learn：\n';
         content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
         content += `当前已完成脚本数量：${complateNum}；\n`;
-        content += `当前剩余运行脚本数量：${browsers.length - needNotice.length - complateNum}；\n`;
+        content += `当前剩余运行脚本数量：${currentRunNum > 0 ? currentRunNum : 0}；\n`;
         content += `提示：如果脚本报错数量多或报错频率高，请尝试减少最大运行脚本数量，当前配置为:${maxRunNum}；\n`;
         content += `${dayjs().format('YYYY-MM-DD HH:mm:ss')}。`;
         this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
           // 处理通知逻辑
-          this.ctx.helper.WxNotify({
-            WX_COMPANY_ID: wxCompanyId,
-            WX_APP_ID: wxAppId,
-            WX_APP_SECRET: wxSecret,
-            content,
-          });
+          this.ctx.service.notice.sendNotice({ message: content, receiver: '3' });
         }
       }
     }
@@ -341,7 +337,7 @@ class Bots extends Service {
   }
 
   async sendDayLog() {
-    const validata = await this.ctx.helper.validataServer();
+    const validata = await this.ctx.service.notice.validataServer();
     this.ctx.model.BotLog.deleteMany({ type: '1' });
     const configList = await this.ctx.model.BotConfig.find();
     const browsers = await this.ctx.model.BotBrowser.find({ status: '1' });
@@ -359,7 +355,7 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
-      const { wxCompanyId, wxAppId, wxSecret, complateNum } = config;
+      const { complateNum } = config;
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
@@ -378,12 +374,7 @@ class Bots extends Service {
       content += `当前在线Bot：${browsers.length - overBrowser.length}。\n`;
       this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
-        this.ctx.helper.WxNotify({
-          WX_COMPANY_ID: wxCompanyId,
-          WX_APP_ID: wxAppId,
-          WX_APP_SECRET: wxSecret,
-          content,
-        });
+        this.ctx.service.notice.sendNotice({ message: content, receiver: '3' });
       }
       this.updateConfig({ id: config._id, validata });
     }
@@ -427,7 +418,7 @@ class Bots extends Service {
       if (config.validata) {
         this.updateConfig({ id: config._id, complateNum });
       } else {
-        const validata = await this.ctx.helper.validataServer();
+        const validata = await this.ctx.service.notice.validataServer();
         this.updateConfig({ id: config._id, complateNum, validata });
       }
     }
