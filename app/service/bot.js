@@ -274,7 +274,7 @@ class Bots extends Service {
         if (configList.length > 0) {
           config = configList[0];
         }
-        const { wxCompanyId, wxAppId, wxSecret, maxRunNum, complateNum } = config;
+        const { maxRunNum, complateNum } = config;
         let content = 'Auto Learn：\n';
         content += `${needNotice.length}个脚本停止运行，稍后将自动重启；\n`;
         content += `当前已完成脚本数量：${complateNum}；\n`;
@@ -353,7 +353,7 @@ class Bots extends Service {
     let config = {};
     if (configList.length > 0) {
       config = configList[0];
-      const { wxCompanyId, wxAppId, wxSecret, complateNum } = config;
+      const { complateNum } = config;
       // 当前在线
       const students = await this.ctx.model.BotStudents.find();
       // 昨日完成
