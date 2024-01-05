@@ -26,7 +26,7 @@ module.exports = appInfo => {
 
   // mongoose数据库配置
   config.mongoose = {
-    url: 'mongodb://127.0.0.1:27017/MYDB', // 端口号27021数据库名MYDB
+    url: 'mongodb://127.0.0.1:27017/cocDb', // 端口号27021数据库名MYDB
     options: { useNewUrlParser: true, useUnifiedTopology: true }, // 其他配置警告解除方法
   };
 

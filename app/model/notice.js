@@ -7,6 +7,7 @@ module.exports = app => {
     sender: { type: String, default: 'admin' },
     message: { type: String, required: true },
     sendTime: { type: String, required: true },
+    status: { type: Number, required: true }, // 1 失败 0 成功
   });
   return mongoose.model('NoticeModel', newSchema, 'notice');
 };
