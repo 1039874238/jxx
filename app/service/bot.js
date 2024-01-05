@@ -285,7 +285,7 @@ class Bots extends Service {
         this.ctx.model.BotLog.insertMany([{ type: '2', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
         if (config.notice) {
           // 处理通知逻辑
-          this.ctx.service.notice.sendNotice({ message: content, receiver: '3' });
+          this.ctx.service.notice.sendNotice({ message: content, receiver: '2|3' });
         }
       }
     }
@@ -374,7 +374,7 @@ class Bots extends Service {
       content += `当前在线Bot：${browsers.length - overBrowser.length}。\n`;
       this.ctx.model.BotLog.insertMany([{ type: '3', logTime: dayjs().format('YYYY-MM-DD HH:mm:ss'), content }]);
       if (config.notice) {
-        this.ctx.service.notice.sendNotice({ message: content, receiver: '3' });
+        this.ctx.service.notice.sendNotice({ message: content, receiver: '2|3' });
       }
       this.updateConfig({ id: config._id, validata });
     }
