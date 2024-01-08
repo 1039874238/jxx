@@ -73,7 +73,7 @@ class Notice extends Service {
           'Content-Type': 'application/json',
         },
       });
-      if (res.data.errcode !== 42001) {
+      if (res.data.errcode === 0) {
         const config = configList[0];
         const { wxCompanyId, wxSecret, wxAppId } = config;
         return {
